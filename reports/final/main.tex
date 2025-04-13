@@ -14,7 +14,10 @@
 \bibliography{biblio}
 \usepackage{booktabs}   % enhances tables
 \usepackage{siunitx}
+\sisetup{separate-uncertainty=true}
 \usepackage{caption}
+\usepackage{appendix}
+\usepackage{float}
 
 \newcommand{\otoprule}{\midrule[\heavyrulewidth]}
 
@@ -65,48 +68,73 @@
 
 \begin{document}
 % \setlength{\parindent}{0in}
-
+\pagestyle{fancy}
 % Title
+\thispagestyle{empty}
+\onecolumn
+\begin{center}
+    \vspace{7cm}
+    \LARGE
+    \textbf{Acoustic Localisation of Chafer Beetle Larvae}\\
+    \vspace{3cm}
+
+    \Large
+    Candidate Number: 8211Q\\
+    NST: Part III Physics\\
+    University of Cambridge\\
+    Supervisor: Dr Christopher Lester
+    \vspace{3cm}
+\end{center}
+
 \title{\LARGE \textbf{Acoustic Localisation of Chafer Beetle Larvae}}
 
 \author{
-    Tiger Yotsawat Tawantalerngrit\\
+    Candidate Number: 8211Q\\
     NST: Part III Physics\\
     University of Cambridge \\
     Supervisor: Dr Christopher Lester
 }
 
-\pagestyle{fancy}       % use fancy style from fancyhdr
-\thispagestyle{empty}   % remove page headers from first page
+\begin{center}
+    \Large\textbf{Abstract}
+\end{center}
+The detection of insects via acoustic means has long been a field of interest since the early 1990's. The presence of insects in soil, grains and plant bodies have been successfully been detected using various techniques including the use of sensitive accelerometers, electret microphones and laser doppler vibrometers. However, little attempt has been made to precisely locate the insects owing to limited understanding of how wave propagates through soil and due to the nature of soil as a highly dispersive medium. In this work, we highlight the major difficulties in detecting insects in soil by conducting an experiment on a model system consisting of a piezoelectric speaker as the sound source and an electret microphone as the detector. It was found that while the speed of sound measured in air using the model system was determined to be \SI{344+-1}{\m\per\second}, in agreement with known values, the attenuation of sound displays a more complicated behaviour, preventing the attenuation coefficient from being determined. In the latter half of the work, the range of detection was quantified and mapped out for different values of soil saturation and wave frequencies. For frequencies corresponding to the range present in the spectral analysis of chafer beetle recordings, the range of detection was of order \SI{50}{\cm} for all values of soil saturation. This limited range confirms the difficulty in detecting the weak signals produced by soil dwelling insects.
 
-\maketitle
+\newpage
+\thispagestyle{empty}
 
-\begin{abstract}
-    Understanding how soil parameters will affect range of detection (to determine in what environment detection can be made - guide future designs)
-    Developed and tested device that can be used to test acoustic properties of soil
-    First tested in air: measured speed of sound and attenuation coefficient
-    Results of simulation and agreement with Biot theory or attenuation equation
-\end{abstract}
+\begin{center}
+    \Large\textbf{Impact of Covid-19}
+\end{center}
+The shutdown of the laboratory due to Covid-19 meant that I had to shift the focus of my project which I originally intended to be an experimental one. The main focus of my project pre-lockdown was on determining the wave properties of sound waves propagating in soil. I had reached a stage where the device which I had to build from scratch was ready for measurement as I highlighted in my report. The calibration of the instruments and measurement of speed and attenuation of the wave in air shows that the same techniques are transferable to measurements in soil.
+
+The result of the lockdown is that I had to incorporate a larger portion of the theoretical modelling of soil, shifting the project to a more computational one. This meant having to study an extra theoretical model and included the need to code an implementation of the model. I had hesitated to do this at first during the uncertain period when the university was in the amber phase and instead focused my efforts on preparing to move my experimental set-up home, with incredibly helpful guidance from Richard King, the Undergraduate Laboratory Manager. Roughly one week was spent planning and moving at this stage.
+
+Once it was clear that shutdown of the laboratory was unavoidable, as an international student, I faced the dilemma of whether to stay in the UK or relocate to Thailand. I preferred to stay as I knew that relocating to Thailand would mean more time wasted having to pack up and leave the UK for good which is no small task. As I had moved away from home in Thailand for 6 years now, the space is no longer suitable for work due to the lack of quiet space and the lack of a desk. Despite all these factors, there was immense pressure to return home from concerned family members so everyday was a constant debate.
+
+To summarise, Covid-19 meant that my original plans to complete my experiment were derailed and I had to switch tracks to a more computational project. The uncertainty in whether to return to Thailand meant that extra time and energy was spent on that difficult decision.
+\thispagestyle{empty}
+\newpage
+\twocolumn
 
 \tableofcontents
 
 \section{Introduction}
-Lawns require regular attention and are often susceptible to damage caused by pests residing beneath the turf. Among the most common lawn pests in the UK are the chafer beetle grubs~\cite{alford_2012}. The adult stage of the beetle is not a threat to the lawn but their root-feeding larvae eat away at the roots of the grass, resulting in dead patches which can be peeled away from the soil surface~\cite{smitley_2012}.
+Lawns require regular attention and are often susceptible to damage caused by pests residing beneath the turf. Among the most common lawn pests in the UK are the chafer beetle grubs~\cite{alford_2012}. The adult stage of the beetle is not a threat to the lawn but their root-feeding larvae eat away at the roots of the grass, resulting in dead patches which can be peeled away from the soil surface~\cite{smitley_2012}. These grubs often escape detection until significant visible damage had occurred.
 
-Biological control via the introduction of a certain species of pathological nematodes known as heterorhabditis bacteriophora is the most commonly used method for treating lawns infested with chafer grubs. Other forms of control such as the use of pesticides are not currently approved for use by home gardeners~\cite{chafer_grubs_in_lawns}. In general, both biological and chemical methods are used to control pests in lawns and gardens though the former raises concerns due to the question of its host specificity and therefore its ecological impact~\cite{mcevoy_1996} while the latter due to its toxicity and environmental factors~\cite{crampton_2020}.
+Since the early 1990's, it has been shown that insects produce vibrations in the infested medium through feeding and burrowing processes which can be picked up using acoustic detection methods. Previous work included the use of sensitive accelerometers, electret microphones or laser doppler vibrometers to detect insects in various media such as grains, wood and plant bodies~\cite{mankin_hagstrum_kairo_2011, michelsen_fink_gogala_traue_1982, johnson_crawford_zhang_2007}. In soil, notable work involved using a steel stake inserted into the sampling site with an accelerometer magnetically attached to the free end~\cite{inyang_mankin_2019}. Though these previous efforts have established techniques of mapping out infestation sites and even estimating the population density~\cite{hubbard_mankin_crocker_2001, mankin_hubbard_flanders_2007} precisely locating the grubs has proved to be a challenge.
 
-Physical control methods have the potential to be both environmentally friendly and species specific. However, the prospect of using physical pest control is hindered by the lack of a sensitive and affordable method for locating and distinguishing between pest and non-pest species~\cite{vincent_hallman_panneton_2003}.
+One major obstacle is the detection of weak insect signals in noisy environments~\cite{vincent_hallman_panneton_2003, mankin_hagstrum_kairo_2011, mankin_mccoy_shapiro_1998}. To better understand the factors limiting the localisation of chafer beetle larvae in lawns, I built and studied a model system consisting of a piezoelectric speaker and a series of electret microphone buried in soil. The speaker acts as the noisy sound source while the microphones record the signal. The aim of the experiment was to determine the characteristics of the insect signal that allow it to be distinguished from noise and to investigate whether the location of the source could be triangulated using multiple detectors.
 
-An abundance of literature exists on acoustic detection methods including the use of sensitive accelerometers, electret microphones and laser doppler vibrometers to detect insects in grains, wood and plant bodies~\cite{mankin_hagstrum_kairo_2011, michelsen_fink_gogala_traue_1982, johnson_crawford_zhang_2007}. It has been found that many species of insects communicate via a process known as stridulation~\cite{gorres_chesmore_2019}. Vibrations with a species-specific acoustic profile are generated by rubbing together body parts and these propagate through various media such as air, plant stems and soil. This gives a premise for using temporal patterns to distinguish between pest and non-pest activities~\cite{mankin_mccoy_shapiro_1998}.
+Owing to the Covid-19 situation, exceptional circumstances prompted a decision to be made to halt the experimental aspect of the work before the system could be tested in the soil sample. Though diverting from the original aim, an important aspect of the detection device is the range of detection. Postulating that the range of detection depends on the frequency of the sound wave being transmitted as well as the microstructural properties of soil such as saturation and porosity, I conducted a numerical investigation of sound propagation through porous media. Using supporting data obtained from the model system built, I mapped out the conditions under which a practical range of detection can be achieved.
 
-In soil, notable work involved using a steel stake inserted into soil at the sampling site. The stake acts as a waveguide coupling vibrations to a sensor attached to its free end~\cite{inyang_mankin_2019}. The signal is then amplified and processed using bespoke software, DAVIS~\cite{mankin_hubbard_weaver_2000}, to determine the likelihood of site infestation. Subterranean insects produce brief broadband vibrational impulses as a result of their movement and feeding. It was shown that these bursts of impulses have a distinct spectral profile from wind and traffic noise~\cite{sanders_mankin_liburd_stelinski_2011}. The feasibilities of mapping out infestation sites and estimating the population density of grubs were shown using these techniques~\cite{hubbard_mankin_crocker_2001, mankin_hubbard_flanders_2007}.
+In this paper, I outline the experimental methods for measuring acoustic signals in soil and discuss results from the numerical simulation of wave propagation in porous media, as applied to a frequency range matching that of insect-produced vibrations. The paper is organised into eight sections. The first two sections define the signal of interest and the soil properties affecting wave propagation. The next two sections are dedicated to the construction and calibration of an acoustic measurement device. Three sections detail a theoretical model for soil and the numerical results for the wave speed, attenuation and detection range for different signal frequencies and soil saturation values. In the final section, I consider the implications of the findings on acoustic methods as a means for pest detection.
 
-It is recognised that the high attenuation of sound in soil limits the precision of acoustic measurements~\cite{mankin_mccoy_shapiro_1998} but few quantitative models currently exist for how soil conditions affect attenuation. In this report, the three-component model for unsaturated porous media as proposed by Detmann~\cite{detmann_num_sim_2008} is used as a basis for incorporating the effects of measurable soil properties on wave propagation in soil. Through numerical simulation, I outline the soil conditions under which acoustic detection methods are useful. It will be apparent that the effects of soil porosity cannot be deduced from the current model and therefore I propose an experimental set-up that allows for the investigation of the dependence of attenuation on porosity.
+\section{Characteristic Signal of Chafer Grubs}
+Work by Mankin et al. lays the foundation for the acoustic detection of soil-dwelling insects such as the chafer grubs by providing spectral comparisons between the sounds produced by different species of insects. These acoustic profiles were also shown to be distinguishable from that of other sources of background noise in the field such as wind and traffic noise, both in the time and frequency domain~\cite{mankin_mccoy_shapiro_1998}.
 
-
-\section{Background}
-\subsection{Chafer Beetle}
-The European Chafer (Amphimallon majale) is a beetle belonging to the Scarabaeidae family. The white grubs of these beetles feed on grass roots causing extensive damage to lawns and can be visually identified by dead yellow patches of grass. The damage is exacerbated by the fact that their natural predators such as crows, foxes and racoons dig up the loosened patches in search of the grubs. Work by Mankin et al. lays the foundation for the acoustic detection of soil-dwelling insects such as the chafer grubs by providing spectral comparisons between the sounds produced by different species of insects. These acoustic profiles were also shown to be distinguishable from that of other sources of background noise in the field such as wind and traffic noise, both in the time and frequency domain~\cite{mankin_mccoy_shapiro_1998}.
+\subsection{Insect and Background Noise}
+Subterranean insects produce brief broadband vibrational impulses as a result of their movement and feeding. It was shown that these bursts of impulses have a distinct spectral profile from wind and traffic noise~\cite{sanders_mankin_liburd_stelinski_2011}. Figure~\ref{fig:insect-background} shows the power of the field recording of quiet seismic background noise decreasing with frequency. The quiet background noise is contrasted with two spectral profiles of insect (\textit{D. abbreviatus}) recordings sampled at two different dates. The background noise has a much lower amplitude than the signal of interest at high frequencies.
 
 \begin{figure}
     \centering
@@ -115,6 +143,8 @@ The European Chafer (Amphimallon majale) is a beetle belonging to the Scarabaeid
     \label{fig:insect-background}
 \end{figure}
 
+A comparison of louder background noises due to wind and vehicles with that of the white grubs is shown in Figure~\ref{fig:insect-wind}. Here, the spectral profile of the background noise is broadband and therefore has significant contributions even in the higher frequency region. It can be noted, however, that while the signal level remains roughly the same across the entire frequency range for the beetles, there is a significant drop in power going from the low frequency to high frequency region in the wind and truck spectra. By comparing the ratio of the power below \SI{400}{Hz} and that above for each spectrum, the background noise can be distinguished from the insect noise.
+
 \begin{figure}
     \centering
     \includegraphics[width = \columnwidth]{figures/insect-wind.eps}
@@ -122,78 +152,204 @@ The European Chafer (Amphimallon majale) is a beetle belonging to the Scarabaeid
     \label{fig:insect-wind}
 \end{figure}
 
-Figure~\ref{fig:insect-background} shows that seismic background noise recorded in the field has a much lower amplitude than the signal of interest at higher frequencies (1/f pink noise?). Figure~\ref{fig:insect-wind} compares the louder background noise from wind and vehicles with that of the white grubs. Here, the spectral profile of the background noise is broadband and therefore has significant contributions even in the higher frequency region. It can be noted however that there is a much more prominent drop in power at frequencies above \SI{400}{Hz} compared to that below this frequency. By comparing this power ratio of each spectrum, the background noise can still be distinguished from the insect noise.
+\subsection{Comparing Different Insect Species}
+
+In Figure~\ref{fig:insect-compare}, the Fourier spectra of different species of insects were compared. Each of these spectra are broadband between \SIrange{0.1}{3.16}{\kilo\hertz} and therefore the sound of chafer grubs cannot be reliably distinguished from other species. The broadband feature suggests that the detected sounds are not species-specific communication signals, known as stridulation~\cite{gorres_chesmore_2019}, but rather are produced through burrowing and feeding activities~\cite{mankin_mccoy_shapiro_1998}.
 
 \begin{figure}
     \centering
     \includegraphics[width = \columnwidth]{figures/insect-compare.eps}
-    \caption{Comparison of insect spectra. Adapted from Mankin et al.~\cite{mankin_mccoy_shapiro_1998}}
+    \caption{Comparison of insect spectra. While the quiet background noise does not present a problem for detection, louder noises due to passing vehicles and wind are more challenging to exclude. Adapted from Mankin et al.~\cite{mankin_mccoy_shapiro_1998}}
     \label{fig:insect-compare}
 \end{figure}
 
-In Figure~\ref{fig:insect-compare}, the Fourier spectra of different species of insects were compared. Each of these spectra are broadband between \SIrange{0.1}{3.16}{\kilo\hertz} and therefore cannot be reliably distinguished from each other. The broadband feature suggests that the detected sounds are not species-specific stridulations used for communication but rather are produced through movements against the soil and through feeding processes~\cite{mankin_mccoy_shapiro_1998}. This, however, does not rule out the possibility of using acoustic signals to selectively detect lawn pests. Once located, further recording can be made at the site of infestation and the time domain signals can be used to listen for the quieter stridulations. Trained listeners are able to distinguish different insect sounds by ear~\cite{mankin_hubbard_weaver_2000}.
+These findings show that while the quiet background noise does not present a problem for detection, louder noises due to passing vehicles and wind are more challenging to exclude. Detection can however be conducted during quieter hours with less vehicles. Though it is not possible to distinguish between different insect species using their frequency spectra, once located, more accurate recordings can be made at the site of infestation to listen for the quieter stridulations.
 
-\subsection{Soil Physics}
-Soil is a porous medium through which water, gas and solutes can move. The solid skeleton of soil is typically composed of sedimentary materials such as sandstone, peat soil, granular soil, clay or limestone depending on the soil type. In naturally occurring soil samples, the pore space between the solid grains is in general filled with at least two immiscible fluids, namely air and water, unless the soil is saturated in which case the entire pore space is occupied by water. Topsoil is the uppermost layer of soil, typically the top \SI{30}{cm} from the surface, with the highest concentration of microorganisms and is therefore the layer of interest in this study~\cite{arrouays_deslais_badeau_2006}. In modelling the soil, the two quantities of interest are porosity and saturation. These can be readily determined in the field and exhibit seasonal variation~\cite{castiglioni_sasal_wilson_oszust_2018}. The temporal variation of these quantities would affect the attenuation of sound waves and hence the acoustic detectability of the chafer beetle grubs are highly dependent on soil conditions. As acoustic waves in soil also propagate through the pore fluids, the concepts of capillary pressure and permeability are also introduced at this point.
+\section{Microstructural Parameters of Soil}
+The signal produced by the chafer grub travels through soil to reach the detector. In the model system used in the experiment, the property of the soil can be varied in two different ways, by varying how wet and compact the soil sample is. Here, we discuss how these microstructural properties are quantified.
 
-\subsubsection{Porosity}    \label{sec:porosity}
-Porosity is a measure of how tightly packed the soil is. It is defined as the ratio of volume of void, either filled by a single pore fluid or a mixture of immiscible fluids, to the entire representative volume element (RVE). The RVE is a concept in continuum mechanics that allows heterogeneous materials to be modelled as a continuous body~\cite{hill_1972}. The RVE is defined as the volume that effectively includes a sampling of all microscopic heterogeneity and yet remains small enough to be considered a volume element.
+Soil is a porous medium through which water, gas and solutes can move. The solid skeleton of soil is typically composed of sedimentary materials such as sandstone, peat soil, granular soil, clay or limestone depending on the soil type. In Cambridge, the soil composition is a mixture of freely draining lime-rich loamy soil and lime-rich clayey soil with impeded draining~\cite{landis_2004,rhs_gardening_2009}. The soil selected for this study is loamy clay soil representative of that found in the area.
 
-\begin{equation} \label{eq:porosity}
+\subsection{Porosity}    \label{sec:porosity}
+Porosity is a measure of how much space there is between the soil grains. It is defined as the ratio of volume of void, either filled by a single pore fluid or a mixture of immiscible fluids, to the entire representative volume element (RVE). The RVE is a concept in continuum mechanics that allows heterogeneous materials to be modelled as a continuous body~\cite{hill_1972}. The RVE is defined as the volume that effectively includes a sampling of all microscopic heterogeneity and yet remains small enough to be considered a volume element.
+
+\begin{equation*}
     n = \frac{V_\varnothing}{V_{RVE}}
-\end{equation}
+\end{equation*}
 
-where $V_{\varnothing}$ is the volume of void within the RVE and $V_{RVE}$ is the volume of the RVE.
+where $n$ is the porosity, $V_{\varnothing}$ is the volume of void within the RVE and $V_{RVE}$ is the volume of the RVE.
 
-\subsubsection{Saturation}
-As the aim is to model unsaturated soil samples, one needs to introduce another microstructural variable known as the degree of saturation. This is defined as the ratio of the volume of a single phase of pore fluid over the entire volume of void within an RVE. The sum of the degree of saturations over all fluid types is by definition equal to one.
+\subsection{Saturation}
+In naturally occurring soil samples, the pore space between the solid grains is in general filled with at least two immiscible fluids, namely air and water, unless the soil is saturated in which case the entire pore space is occupied by water. Saturation is defined as the ratio of the volume of a single phase of pore fluid over the entire volume of void within an RVE. The sum of the degree of saturations over all fluid types is by definition equal to one.
 
-\begin{equation} \label{eq:saturation}
+\begin{equation*}
     S^{\theta} = \frac{V^{\theta}}{V_{RVE}} \quad\text{where $\theta \in \{F, G\}$}
-\end{equation}
+\end{equation*}
 
-where the subscript indices $F$ and $G$ denote variables relating to water and air respectively. From this point onwards, as we are dealing only with water and air as our two pore fluids, we shall drop the theta suffix and define the degree of saturation for water as $S$ and therefore it follows that the degree of saturation for air is $1 - S$.
+where $S$ is the saturation, $V$ is the volume and the subscript indices $F$ and $G$ denote variables relating to water and air respectively. From this point onwards, as we are dealing only with water and air as our two pore fluids, we shall drop the $\theta$ suffix and define the degree of saturation for water as $S$ and therefore it follows that the degree of saturation for air is $1 - S$.
 
-\subsubsection{Capillary Pressure}
+\section{Material and Methods}
+In this section, I outline the method used to build a device that would detect signal from a source buried in a medium. Though the experiment had not reached the stage of triangulating a buried sound source, useful techniques to measure wave properties in the medium were developed. Firstly, the technical specifications for each major component of the device are discussed followed by details of the signal processing circuit. I then propose a method to measure the speed and attenuation of waves in soil.
+
+The speed and attenuation of sound were measured using a piezoelectric speaker (\textit{Sonitron Blue Line SPS-29-T00}) and an electret condenser microphone (\textit{Kingstate KECG2738PBJ-A}) connected to a signal processing circuit. Circuit components were selected to bandpass filter and amplify the signal received by the microphone. The full circuit diagram is shown in Figure~\ref{fig:circuit-diagram}. The values of the components used are summarised in Table~\ref{t:electric-components}. For investigating the method for measuring attenuation and speed of sound, a pure sinusoidal wave with variable frequency is used.
+
+\begin{figure}
+    \centering
+    \includegraphics[width = \columnwidth]{figures/circuit-diagram.eps}
+    \caption{Circuit diagram showing the circuits used for signal processing.}
+    \label{fig:circuit-diagram}
+\end{figure}
+\begin{table}
+    \caption{caption}
+    \label{t:electric-components}
+    \centering
+    \begin{tabular}{lcc}
+        \toprule
+        $n$ & $R_n$ (\si{\kilo\ohm}) & $C_n$ (\si{\farad}) \\\otoprule
+        $L$ & 2.2                    & \num{1d-7}          \\
+        1   & 0.64                   & \num{47d-6}         \\
+        2   & 1.5                    & \num{3.30d-7}       \\
+        3   & 1.5                    & \num{5d-9}          \\
+        4   & 2.2                    &                     \\
+        5   & 680                    &                     \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\subsection{Signal Output}
+The signal is output through the \textit{SPS-20-T00} speaker. Figure~\ref{fig:speaker-response} shows the sound pressure level against frequency. The speaker is designed to operate in the constant output region between \SIrange{1}{20}{\kilo\hertz}. The input to the speaker is connected directly to a function generator.
+\begin{figure}
+    \centering
+    \includegraphics[width = \columnwidth]{figures/speaker-response.eps}
+    \caption{Response behaviour of the speaker component against frequency. Adapted from SPS-20-T00 Datasheet}
+    \label{fig:speaker-response}
+\end{figure}
+
+\subsection{Function Generator Frequency Sweep} \label{sec:function-gen}
+\textit{Black Star Jupiter 2000} was used as function generator powering the speaker. The peak-to-peak voltage output was held constant for maximum sound pressure output. The function generator permits a constant D.C. control voltage input that varies the output frequency. This provides a means for a data acquisition technique using \textit{LabVIEW} software together with an \textit{Arduino UNO} to electronically control the frequency setting and automatically record data (see Section~\ref{sec:data-acquisition}).
+
+The control voltage was set using an \textit{Arduino UNO} to vary between \SIrange{0}{5}{\volt}. As illustrated by the speaker circuit in Figure~\ref{fig:circuit-diagram}, the \textit{Arduino UNO} output is a pulse-width modulated (PWM) D.C. signal. This was converted to a constant D.C. voltage by passing through a low-pass RC filter. The filter was chosen to have a cut-off frequency of \SI{5}{\hertz}. We note that the function generator has a finite input impedance $Z_{in} = \SI{9}{\kilo\ohm}$ and therefore the combined behaviour of the filter-generator circuit is not that of an ideal low-pass filter. The voltage measured across the capacitor $C1$ will be proportional to the combined impedance of the capacitor and the function generator in parallel. The resulting control voltage is given by the potential divider equation $V_C = V_{mean}Z_{C,in}/(Z_{C,in} + R1)$ where $Z_{C,in} \leq \SI{9}{\kilo\ohm}$ is the combined impedance, $V_{mean}$ is the mean voltage of the PWM signal passed to the filter and $R1$ is the resistance of the fixed resistor. To utilise the full range of the signal, we see that it must be the case that $R1$ is chosen to be much less than \SI{9}{\kilo\ohm}.
+
+Settings on the function generator were selected to allow the frequency to vary between the range \SIrange{1}{10}{\kilo\hertz} corresponding to the linear response region of the speaker and microphone system.
+
+\subsection{Sound and Vibration Sensor}
+An electret condenser microphone (\textit{Kingstate KECG2738PBJ-A}) was used as a transducer to convert the sound pressure to measurable signal. Sensors of this type have been shown by Mankin et al. (2000)~\cite{mankin_hubbard_weaver_2000} to be a suitable low-cost alternative to highly sensitive accelerometers, for the application of insect detection. The voltage output of the microphone is proportional to the sound pressure. Figure~\ref{fig:electret-response} shows the sensitivity against frequency.
+
+\begin{figure}
+    \centering
+    \includegraphics[width = \columnwidth]{figures/electret-response.eps}
+    \caption{Sensitivity of the electret microphone against frequency. Adapted from Kingstate KECG2738PBJ-A Data Sheet.}
+    \label{fig:electret-response}
+\end{figure}
+
+\subsection{Filtering and Minimising Noise}
+The detected signal is band-limited and therefore a bandpass filter was designed by passing the microphone output through a high-pass and low-pass RC filter (Fig.~\ref{fig:circuit-diagram}) with cut-off frequencies equal to \SIlist{0.3;21.2}{\kilo\hertz}. The filter heavily suppresses components that do not lie in between these cut-off frequencies.
+
+It is possible that the sound emitted by the speaker would bounce off walls and nearby objects so care was taken to conduct the experiment away from obstacles. The effects of noise due to magnetic fields in the environment were minimised by twisting long wires connecting the speaker and microphone to the signal processing circuit. Any noise introduced in one wire equally affects the other wire tracing approximately the same path in space and therefore measurement of potential difference across the terminals of the microphone is unaffected by such noise.
+
+\subsection{Differential Amplifier}
+It is necessary to amplify the weak output from the microphone before digitising and recording the signal. A differential operational amplifier circuit (Fig.~\ref{fig:circuit-diagram}) was chosen for this task. The amplifier compares the signal at its two inputs and amplifies the difference between them. The differential measurement has an advantage over a simple inverting amplifying circuit where the positive input is connected to ground and the negative input is amplified. Any noise common to the both inputs are ideally cancelled out in the process.
+
+The differential amplifier has an output given by:
+\begin{equation*}
+    V_{out} = \frac{R5}{R4}(V_+ - V_-)
+\end{equation*}
+where $V_{out}$ is the output from the amplifier, $V_+$ and $V_-$ are the voltage inputs at the non-inverting (+) and inverting (-) input terminals respectively and the ratio $R5/R4$ is defined as the differential gain.
+
+The output from the microphone was amplified with a differential gain of 310 to produce an appreciable signal while avoiding clipping when measured using an oscilloscope. It is worth noting that an ideal differential amplifier features two sets of two identical resistors which necessarily have exactly the same value. In practice, this is not the case and the amplifier will have a finite, non-zero gain for the quantity $(1/2)V_+ + V_-$ defined as the common mode in addition to the desired differential gain. Ideally, this gain is much less than the differential gain.
+
+\subsection{Taking Measurements} \label{sec:data-acquisition}
+Due to time constraints, the measurement techniques that will be discussed below were developed and conducted in air, omitting the need for soil preparation. The aim of conducting these measurements was to determine the attenuation coefficient and the speed of the wave in the medium. For waves travelling through a dispersive medium such as soil, these quantities are frequency dependent.
+
+The signal generating system was set up such that the speaker was powered by a function generator as discussed in Section~\ref{sec:function-gen}. The frequency of the function generator was electronically varied using an Arduino UNO. A program was developed on LabVIEW to send commands to the Arduino and automatically record the filtered and amplified signal from the microphone.
+
+The procedure used for conducting the measurement generated data to determine both the speed and attenuation for different wave frequencies. The speaker and microphone were initially clamped at a relative separation of \SI{60}{\cm} apart. The peak-to-peak voltage $V_{PP}$ and phase shift $\Delta\phi$ was recorded for different frequencies using the LabVIEW program. The relative separation $\Delta{x}$ was incrementally reduced. The new value of $\Delta{x}$ was recorded and the measurements repeated until the speaker and microphone meet.
+
+For each frequency, two plots were created. The plot of $ln(V_{PP})$ against $\Delta{x}$ and $\Delta\phi$ against $\Delta{x}$ have gradients equal to minus the attenuation coefficient $\alpha$ and the wavenumber $k$ respectively. The speed $v$ of the wave is then $v = \omega/k$ where $\omega$ is the angular frequency. By plotting the different values of $v$ and $\alpha$ against frequency, the frequency dependence can be determined.
+
+\section{Results and Discussion}
+In this section, I present the results obtained from the experiment. The calibration of the function generator and the LabVIEW controls are first discussed followed an assessment of the signal-to-noise ratio. Examples of the plots used to determine the wave speed and attenuation coefficient is examined below for a single frequency. It was found that while the wave speed is straightforward to obtain from Figure~\ref{fig:phaseshift}, the plot of $ln(V_{PP})$ against $\Delta{x}$ in Figure~\ref{fig:attenon} displays unexpected behaviour.
+\subsection{Calibration}
+The function generator was set up to have a frequency range of \SIrange{3}{12}{\kilo\hertz} as the control voltage was varied between \SIrange{0}{5}{\volt}. Figure~\ref{fig:control_freq} shows a linear relationship between the output frequency of the function generator and the control voltage.
+\begin{figure}
+    \centering
+    \includegraphics[width = \columnwidth]{figures/control_freq.eps}
+    \caption{Plot of output frequency against control voltage input to the Black Star Jupiter 2000 function generator.}
+    \label{fig:control_freq}
+\end{figure}
+As the LabVIEW program was used to vary the control voltage, it is also useful to consider the relationship between the voltage command issued by the user to the program versus the actual control voltage. This is shown in Figure~\ref{fig:labview_control}. We see that the gradient deviates slightly from unity and the intercept is non-zero. This however has no observable effects on quantities derived from the experiment as the frequency of the wave generated by the speaker is directly measured.
+\begin{figure}
+    \centering
+    \includegraphics[width = \columnwidth]{figures/labview_control.eps}
+    \caption{Plot of control voltage against LabVIEW user input.}
+    \label{fig:labview_control}
+\end{figure}
+\subsection{Signal-to-noise Ratio}
+Efforts were made to reduce noise in the experiment. The signal-to-noise power ratio calculated from the Fourier transform of a \SI{5645+-1}{\hertz} signal (Fig.~\ref{fig:fourier}) is $\sim\num{1d-4}$.
+\begin{figure}
+    \centering
+    \includegraphics[width = \columnwidth]{figures/fourier.eps}
+    \caption{Fourier spectrum of signal recording from electret microphone for \SI{5645+-1}{\hertz} signal}
+    \label{fig:fourier}
+\end{figure}
+
+\subsection{Speed Measurement}
+The wave speed was calculated from Figure~\ref{fig:phaseshift}. Data was obtained for a \SI{1515+-1}{\hertz} wave in air. The speed of sound in air is known to be approximately \SI{343}{\m\per\second}. The calculated speed using the method discussed in Section~\ref{sec:data-acquisition} was \SI{344+-1}{\m\per\second} which agrees with the known value.
+\begin{figure}
+    \centering
+    \includegraphics[width = \columnwidth]{figures/phaseshift.eps}
+    \caption{Plot of phase shift against relative separation between input signal to the speaker and detected signal from the electret microphone.}
+    \label{fig:phaseshift}
+\end{figure}
+
+\subsection{Attenuation Measurement}
+The amplitude $A$ of the wave is expected to exhibit the usual exponential decay of the form $A = A_0\textrm{exp\,}(-\alpha{x})$ where $A_0$ is the initial amplitude of the wave and $\alpha$ is the attenuation coefficient. It is shown in Figure~\ref{fig:attenon} that this naive assumption does not apply in this case. The amplitude decreases in a non-exponential fashion up until a relative separation of approximately \SI{40}{\cm} when the amplitude begins to recover.
+\begin{figure}
+    \centering
+    \includegraphics[width = \columnwidth]{figures/attenon.eps}
+    \caption{Plot of signal amplitude against relative separation for the on-axis measurement.}
+    \label{fig:attenon}
+\end{figure}
+
+This unexpected behaviour is suspected to be due to the fact that the wave emitted from the speaker, which is an extended object with finite dimensions, is not a plane wave. Therefore the simple plane wave ansatz $A = A_0\textrm{exp\,}(i\textbf{k}\cdot\textbf{x})$ where $\textbf{k}$ is the complex wavevector and $\textbf{x}$ is the direction of propagation, does not apply. In hope to grasp the effects of the geometry of the speaker, the experiment was repeated but with the microphone varying along a direction $\num{30}^\circ$ to the normal of the speaker surface. The result is shown in Figure~\ref{fig:attenoff}. In this off-axis case, the form of the decay is not simply a scaled version of the on-axis one pointing to the possibility that the wavefront is neither planar nor circular but rather has a more complex geometry.
+\begin{figure}
+    \centering
+    \includegraphics[width = \columnwidth]{figures/attenoff.eps}
+    \caption{Plot of signal amplitude against relative separation for the off-axis measurement.}
+    \label{fig:attenoff}
+\end{figure}
+The results in Figure~\ref{fig:attenon} and \ref{fig:attenoff} show that the attenuation coefficient cannot be calculated from the current experimental set-up. It became clear that if one were to attempt to fit an exponential decay to the data and exclude outliers, this would be neglecting the interesting physics that should instead be explored in more detail. At this stage, the experimental aspect of the work had to be paused and we turn our attention instead to a numerical simulation of the wave propagation in soil.
+
+\section{Soil as an Unsaturated Porous Medium}
+We now shift our focus to the secondary aim of the paper, that is, to map out conditions under which a suitable range of  detection can be achieved by an acoustic detection device. The detection range depends on how heavily the signal is attenuated as it travels through a medium. The relevant attenuation coefficient is a function of parameters of both the medium and the wave. Here I chose to focus on how the attenuation coefficient depends on the frequency of the wave and the saturation of the soil.
+
+The aim is to build towards a description of unsaturated soil as a three-component poroelastic medium~\cite{detmann_propagation_2008}. Saturated porous media consist of two components, soil and water. They are shown to support three types of waves---one shear wave $S$ and two compressional waves, $P1$ and $P2$. The $S$ and $P1$ waves are attributed to the solid skeleton while the $P2$ wave is attributed to the pore fluid. The three-component model for unsaturated porous media extends these by allowing for the existence of a second fluid immiscible with the first. It was shown that a third type of wave, $P3$, emerges due to the capillary pressure between the two fluids~\cite{detmann_num_sim_2008}. In practice, both $P2$ and $P3$ waves are difficult to measure experimentally as they are heavily attenuated.
+
+In this section, we begin by introducing the important material parameters relating to the composition of the soil. We will see that the dependence of the attenuation coefficient on soil saturation enters through these parameters. Later, the balance laws~\cite{jog_2015} for the three-component model, presented in the Eulerian picture are introduced.
+
+\subsection{Capillary Pressure}
 Capillary pressure is the pressure that exists at the interface between two immiscible fluids in a thin tube, or in this case the narrow pore spaces between the solid skeleton. The fluid with the higher wettability---the tendency to be adsorbed by the capillary walls---is defined as the wetting phase while the other is defined as the non-wetting phase. In the case of a water-air mixture in sandstone, water is the wetting phase. We define capillary pressure as the pressure difference at the interface of the fluids
 
 \begin{equation} \label{eq:capillary-def}
-    p_c= p_{non-wetting} - p_{wetting}
+    p_c= p_{non-wetting} - p_{wetting}.
 \end{equation}
 
-This quantity is important as it is the main driving force responsible for the third type of compressional wave $P3$ that arises in unsaturated porous media~\cite{detmann_num_sim_2008}.
+where $p_c$ is the capillary pressure, $p_{non-wetting}$ and $p_{wetting}$ are the pressures of the two fluid phases.
+
+The dependence of capillary pressure on soil saturation can be obtained empirically through experiments or via closed-form equations such as those proposed by Santos et al. or van Genuchten~\cite{van_genuchten_1980}. The former is chosen for this simulation and is shown in Figure~\ref{fig:capillary_santos}.
 
 \begin{figure}
     \centering
-    \includegraphics[width = 0.2\columnwidth]{figures/capillary-angle.eps}
-    \caption{Capillary angle. Adapted from Glover.~\cite{glover_2014}}
-    \label{fig:capillary-angle}
+    \includegraphics[width = \columnwidth]{figures/capillary_santos.eps}
+    \caption{Plot of Santos' capillary pressure.}
+    \label{fig:capillary_santos}
 \end{figure}
 
-Although pore spaces in soil has a rather complex geometry, if we approximate these as bundles of capillary tubes, we get that the capillary pressure is related to surface tension $\gamma$ by
+\begin{equation*}
+    p_c = p_{c_r}e^{-AS_{o_r}}\bigl(e^{-AS_o} - 1\bigr)
+\end{equation*}
 
-\begin{equation}    \label{eq:tube-pressure}
-    p_c = \frac{2\gamma}{R_{curve}},
-\end{equation}
-
-where $R_{curve}$ is the radius of curvature of the fluid meniscus, $\gamma$ is the surface tension at the wetting-non-wetting interface. As seen in Figure~\ref{fig:capillary-angle} if we let $R$ by the radius of the capillary tube then we see that $R_{curve} = R / \cos\theta$ where $\theta$ is the wetting angle which is a constant determined by the balance of surface energy between each material phase. The contact angle is given by Young’s equation~\cite{bai_wen_2019}:
-
-\begin{figure}
-    \centering
-    \includegraphics[width = \columnwidth]{figures/wetting-angle.eps}
-    \caption{Wetting angle. Adapted from Bai and Wen~\cite{bai_wen_2019}}
-    \label{fig:wetting-angle}
-\end{figure}
-
-\begin{equation}
-    \cos\theta = \frac{\gamma^{SG} - \gamma^{SF}}{\gamma^{FG}}
-\end{equation}
-
-From Equation~\ref{eq:tube-pressure}, we see that the capillary pressure $p_c$ must depend on the surface energy $\gamma$, which for a given mixture of pore fluid is a constant, and importantly the pore radius. Relating this to the soil property, the greater the porosity, the larger the pore radius and hence the smaller the capillary pressure.
-
-If a wetting fluid is introduced at one end of a soil sample saturated by a non-wetting phase, the wetting fluid is spontaneously drawn in by the capillary pressure in a process known as imbibition. An analogue of this is when a non-wetting fluid is introduced to the sample saturated by a wetting fluid. In this case, the process is called drainage and a displacement pressure is required to overcome the capillary force holding the fluid in place~\cite{glover_2014}.
-
-By considering this drainage process and modelling the pores as bundles of capillary tubes, it is possible to deduce that capillary pressure should increase as water saturation decreases in the soil sample. This is because capillary pressure is inversely proportional to the radius of the tube in our simple model. Initially, as air is introduced into the water-saturated soil sample, a relatively small displacement pressure is needed to displace water from larger pores. As these pores are filled by the air, an increasingly large pressure is needed to further displace the water from smaller pores. Later a relation between capillary pressure and saturation proposed by van Genuchten to fit experimental data for the air-water-sandstone mixture will be used for some numerical examples.
+where $A = \num{6.029158}$, $S_{o_r} = \num{0.519}$, $p_{c_r}=\num{0.0000026509109e9}$.
 
 \subsubsection{Permeability}
 The permeability parameter $k$ measures how well a porous medium can transmit fluid. It is related to the hydraulic conductivity $K$ which is a parameter used to describe how easily a certain fluid flows through a particular porous media by
@@ -204,60 +360,74 @@ The permeability parameter $k$ measures how well a porous medium can transmit fl
 
 where $\eta$ and $\rho$ are the viscosity and density of the fluid, and $g$ is the acceleration of free fall~\cite{wang_2000}. While $K$ is dependent on the properties of the fluid, $k$ is a property of the porous material only. $K$ is defined by Darcy’s law~\cite{kirkham_2014}, the porous media analogue to Ohm’s law for electrical circuits.
 
-\begin{equation}
+\begin{equation*}
     \frac{Q}{A} = -K\frac{dh}{dl},
-\end{equation}
+\end{equation*}
 
 where $Q$ is the volumetric flow rate, $A$ is the cross-sectional area through which the fluid flows and $dh/dl$ is the hydraulic gradient. In defining the hydraulic gradient, the concept of hydraulic head must be introduced. The hydraulic head $h$ has units of length and represents the energy per unit weight of the pore fluid due to its elevation and pore pressure~\cite{hemond_fechner_2015}. The hydraulic gradient $dh/dl$ is the change in head per unit distance along the direction of greatest change in head. That is to say that fluid flows in the direction of maximum decrease in hydraulic head.
 
-\subsection{Towards A Three-Component Model}
-In this section, we aim to build towards a description of unsaturated soil as a three-component poroelastic medium~\cite{detmann_propagation_2008}. To do this, we first introduce the balance laws~\cite{jog_2015}, presented in the Eulerian picture, for the simpler problem of fluid saturated soil. These arise in the discussion of the classical models used to describe porous media under the framework of continuum mechanics. Continuum mechanics allows us to view the material as a continuous mass rather than as discrete particles~\cite{ostoja-starzewski_zhang_2016} through the use of a representative volume element (RVE) defined in Section~\ref{sec:porosity}. The models that will be discussed are the Full Model, Biot’s Model and the Simple Mixture Model. The latter two models can be obtained from the Full Model by making a series of simplifying assumptions~\cite{detmann_surface_wave_2006}.
+Wave propagation depends on the resistance parameters $\pi$. These are related to the permeability parameter by $\pi = \eta/k$ where $\eta$ is the viscosity of the fluid and $k$ is the permeability parameter for the soil. This describes the resistance of the porous material against the flow of the fluid. It is assumed that the resistance parameter for the fluid mixture can be separated into the effective resistance for the water and gas
 
-From these models, saturated porous media are shown to support three types of waves---one shear wave $S$ and two compressional waves, $P1$ and $P2$. The $S$ and $P1$ waves are attributed to the solid skeleton while the $P1$ wave is due to the pore fluid. The three-component model extends these by allowing for the existence of a second fluid immiscible with the first. It was shown that a third type of wave, $P3$, emerges due to the capillary pressure between the two fluids. In practice, both $P2$ and $P3$ waves are difficult to measure experimentally as they are heavily attenuated.
+\begin{equation*}
+    \pi^{FS}= \frac{\pi^F}{k^F}\quad \text{and} \quad \pi^{GS}=\frac{\pi^G}{k^G}
+\end{equation*}
 
-\subsubsection{Full Model}
-The Full Model considers a two-component mixture of a solid skeleton $S$ and a single pore fluid $F$. The model then defines a set of fields, rhotheta for the partial densities, vtheta for the velocities and n for the porosity where the superscript $\theta \in \{S, F\}$ where S and F denote the solid and fluid phases respectively. These fields must then satisfy the balance laws. The balance laws capture the idea that the rate of change of a quantity within a volume must be due to one or more of the following---the flow of the quantity through the surface that bounds the volume, a source that is on the boundary and a source that is within the volume itself~\cite{jog_2015}. For the fields mentioned then~\cite{wilmanski_2002},
+where $\pi^{FS}$ and $\pi^{GS}$ are the effective resistances, $\pi^F$ and $\pi^G$ are the experimentally determined resistance parameters of each fluid. $k^F$ and $k^G$ are the relative permeabilities which depend on saturation. The theoretical relationship as proposed by van Genuchten~\cite{van_genuchten_1980} that fits with experimentally determined behaviour~\cite{wyckoff_botset_1936} are given by
 
-\begin{itemize}
-    \item partial mass balance equations
-          \begin{equation}
-              \frac{\partial{\rho^\theta}}{\partial{t}} +
-              \rho_0^\theta\,\rm{div}\,{\textbf{v}^\theta} = 0 \quad\text{where $\theta \in \{S, F\}$}
-          \end{equation}
-    \item partial momentum balance equations
-          \begin{equation}
-              \rho_0^\theta\frac{\partial{\textbf{v}^\theta}}{\partial{t}} = \rm{div}\,\textbf{T}^\theta + \hat{\textbf{p}}^\theta \quad\text{where $\theta \in \{S, F\}$}
-          \end{equation}
-    \item porosity balance equation
-          \begin{equation}
-              \frac{\partial \Delta{n}}{\partial t} + \phi\,\rm{div}\,(\textbf{v}^F - \textbf{v}^S) = \hat{n},
-              \quad \Delta{n} = n - n_{eqm}
-          \end{equation}
-\end{itemize}
+\begin{align*}
+     & k^F = S^{\frac{1}{2}}\bigl[1 - \bigl(1-S^{\frac{1}{m}}\bigr)^m\bigr]^2 \\
+     & \text{and}                                                             \\
+     & k^G = (1-S)^{\frac{1}{3}}\bigl(1 - S^{\frac{1}{m}}\bigr)^{2m}
+\end{align*}
 
-By defining extra constitutive relations for the Cauchy Tensors, the momentum source and the porosity source, the evolution of the set of fields is determined. A more detailed treatment of the Full Model can be found in Wilmanski’s work~\cite{wilmanski_2002}.
+where $m = \num{0.85}$, a fitting parameter. Figure~\ref{fig:permeability} shows the relative permeabilities plot.
 
-The Full Model is, in practice, difficult to apply. Certain simplifications can be made depending on the application. The Biot’s Model is the most frequently used model to describe processes in fluid-saturated porous media. It can be shown that the Full Model is identical to Biot’s Model provided that the porosity gradient goes to zero. The Simple Mixture Model follows further from the Biot’s model if we neglect the coupling constant between the fluid and the solid phases, the off-diagonal terms in the density matrix and finally the viscosity effects by assuming that the permeability parameter is independent of frequency.
+\begin{figure}
+    \centering
+    \includegraphics[width = \columnwidth]{figures/permeability.eps}
+    \caption{Relative permeabilities against saturation.}
+    \label{fig:permeability}
+\end{figure}
 
-\subsubsection{Three Component Model}
-Extending the same ideas as those introduced in the Full Model but this time adding the contributions of a second pore fluid and making some linearising approximations, we arrive at the Three-Component Model as shown by Wilmanski~\cite{wilmanski_2002}. The set of unknown fields to be solved for are
+\subsection{Material Parameters}
+The final set of parameters are the material parameters $\{\lambda^S + (2/3)\mu^S, F, G, Q^F, Q^G, Q^{FG}\}$. Following the approach used by Detmann~\cite{detmann_analysis_2009}, these macroscopic material parameters can be derived from a set of microscopic parameters that are dependent on the microstructure of the bulk material. This is done by borrowing the relations from Santos, Corbero and Douglas~\cite{santos_corbero_douglas_1990}. In Santos et al.’s approach, the set of material parameters ${K_c^*, B_1, B_2, M_1, M_2, M_3}$ that were used are different from those appearing in the dispersion relations. Detmann shows, however, that these have a simple relationship with the set of parameters $\{\lambda^S + (2/3)\mu^S, F, G, Q^F, Q^G, Q^{FG}\}$ that we wish to evaluate.
 
-\begin{equation}
-    \{\rho^\theta, \textbf{v}^\theta, \textbf{e}^S, n\} \quad\text{where $\theta \in \{S, F, G\}$}
-\end{equation}
+Calculating Santos et al.’s parameters with the capillary relation above and mapping the results to the Detmann material parameters yield a relationship between the material parameters and soil saturation. Figure~\ref{fig:detmann_param_gas} shows the parameters for the case of a sandstone-water-gas mixture. The sandstone skeleton and the pore fluids have the following properties:
 
-where $\rho^\theta$ are the partial densities, $\textbf{v}^\theta$ are the velocities, $\textbf{e}^S$ is the macroscopic deformation tensor for the skeleton and $n$ denotes the porosity. To be able to linearise the model, the following conditions must be true:
+\begin{align} \label{eq:skeleton-properties}
+     & n_0 = \num{0.25},~\rho_0^{SR} = \SI{2650}{\kilo\gram\per\cubic\metre},~K^S = \SI{48109}{\pascal}, \\
+     & K^d = \frac{K^S}{1 + gn_0},~g = \num{50},~k = \SI{1d-7}{\square\metre}
+\end{align}
 
-\begin{gather}
-    \textrm{max}\{||\textbf{e}^S||, |\epsilon^F|, |\epsilon^G|, |\frac{n - n_0}{n_0}|, |\frac{S - S_0}{S_0}|\} << 1 \\
-    \text{where~} ||\textbf{e}^S \equiv max\{|\lambda_e^{(1)}|, |\lambda_e^{(2)}|, |\lambda_e^{(3)}|\},\\
-    \epsilon^F \equiv\frac{\rho_0^F - \rho^F}{\rho_0^F}, \quad\epsilon^G \equiv\frac{\rho_0^G - \rho^G}{\rho_0^G}
-\end{gather}
+\begin{table}
+    \caption{Summary of material properties chosen for modelling.}
+    \label{t:material-properties}
+    \centering
+    \begin{tabular}{lcc}
+        \toprule
+                                                                     & water        & gas         \\\otoprule
+        $\rho_0^{\theta{R}}$ (\si{\kg\per\cubic\m})                  & 1000         & 100         \\
+        $K^\theta$ (\si{\pascal})                                    & \num{2.25e9} & \num{2.2e7} \\
+        $\mu^\theta (\si{\milli\pascal\second}), 20^\circ\textrm{C}$ & 1            & 0.015       \\
+        \bottomrule
+    \end{tabular}
+\end{table}
 
-(i.e. the deviations from equilibrium are small)
+where $n_0$ is the initial porosity, $\rho_0^{SR}$ is the true density of the material with zero porosity, $K^S$ is the bulk modulus of the grains and $K^d$ is the drained modulus which represents the bulk modulus of the empty matrix. The constant g is a fitting constant that is found by fitting the expression with experimental data obtained from different soil types~\cite{white_1983}.
 
-where the subscript zero’s denote the initial value of each quantity, lambdas are the eigenvalues of the deformation tensor eS and F, G are the volume changes of the two fluid phases.
-The balance laws are similar to the full model but now with the additional balance equations for the second pore fluid. To distinguish between the two fluids, let us denote the parameters corresponding to the wetting phase and non-wetting phase with superscripts F and G respectively.
+Figure~\ref{fig:detmann_param_gas} shows the behaviour of the material parameters as saturation is varied. The parameter $\lambda^S + (2/3)\mu^S$ is roughly independent of saturation which is expected as this is a property of the solid skeleton and therefore is not influenced by the composition of the pore fluids. The parameters relating to each pore fluid also behave as expected with the sandstone-water coupling constant and the compressibility factor of the water reaching a maximum but finite value when the soil is saturated with water $(S = 1)$ and going to zero when there is no water in the pores $(S = 0)$. The analogue is true for the parameters relating to the existence of the gas. The coupling constant $Q^{FG}$ between the fluids is zero when either one of the fluids disappears and is maximum near intermediate saturation values.
+
+\begin{figure}
+    \centering
+    \includegraphics[width = \columnwidth]{figures/detmann_param_gas.eps}
+    \caption{Plot of Detmann's material parameters.}
+    \label{fig:detmann_param_gas}
+\end{figure}
+
+\subsection{Three-Component Model}
+We now look at the three-component model which incorporates the parameters mentioned above. We begin with the balance laws which arise from continuum mechanics. Continuum mechanics allows us to view the material as a continuous mass rather than as discrete particles~\cite{ostoja-starzewski_zhang_2016} through the use of a representative volume element (RVE) defined in Section~\ref{sec:porosity}. The balance laws capture the idea that the rate of change of a quantity within a volume must be due to one or more of the following---the flow of the quantity through the surface that bounds the volume, a source that is on the boundary and a source that is within the volume itself~\cite{jog_2015}.
+
+To distinguish between the two fluids, let us denote the parameters corresponding to the wetting phase and non-wetting phase with superscripts $F$ and $G$ respectively.
 
 \begin{itemize}
     \item conservation of mass
@@ -276,26 +446,9 @@ The balance laws are similar to the full model but now with the additional balan
           \end{equation}
 \end{itemize}
 
-The constitutive relations for the stress tensors are:
+Solving the balance equations using appropriate constitutive relations and representing the partial densities instead by volume changes of the components, we end up with the following field equations for the set of essential fields $\{\textbf{v}^\theta, \textbf{e}^S, \epsilon^F, \epsilon^G, n\}$ where $\theta \in \{S, F, G\}$~\cite{detmann_num_sim_2008}:
 
-\begin{align}
-    \textbf{T}^S & = \textbf{T}_0^S + \lambda^Se\textbf{1} + 2\mu^S\textbf{e}^S + Q^F\epsilon^F\textbf{1} + Q^G\epsilon^G\textbf{1}, \quad e\equiv\textrm{tr}\,\textbf{e}^S \\
-    \textbf{T}^F & = -p^F\textbf{1}, p^F = p_0^F - p_0^F\kappa^F\epsilon^F - Q^Fe - Q^{FG}\epsilon^G                                                                        \\
-    \textbf{T}^G & = -p^G\textbf{1}, p^G = p_0^G - p_0^G\kappa^G\epsilon^G - Q^Ge - Q^{FG}\epsilon^F
-\end{align}
-
-The linear constitutive relations for the flux of porosity and for the momentum sources are given by:
-
-\begin{gather}
-    \hat{\textbf{p}}^S = \pi^{FS}(\textbf{v}^F - \textbf{v}^S) + \pi^{GS}(\textbf{v}^F - \textbf{v}^S)\\
-    \hat{\textbf{p}}^F = -\pi^{FS}(\textbf{v}^F - \textbf{v}^S), \quad \hat{\textbf{p}}^G = -\pi^{GS}(\textbf{v}^G - \textbf{v}^S)\\
-    \hat{n} = -\frac{n-n_eqm}{\tau_n}, \quad n_eqm = n_0(1+\delta{e})\\
-    \textbf{J} = \phi^F(\textbf{v}^F - \textbf{v}^S) + \phi^G(\textbf{v}^G - \textbf{v}^S)
-\end{gather}
-
-Finally, solving the balance equations and representing the partial densities instead by volume changes of the components, we end up with the following field equations for the new set of fields $\{\textbf{v}^\theta, \textbf{e}^S, \epsilon^F, \epsilon^G, n\}$ where $\theta \in \{S, F, G\}$~\cite{detmann_num_sim_2008}:
-
-\begin{align}
+\begin{align*}
     \rho_0^S\frac{\partial\textbf{v}^S}{\partial{t}} & = \textrm{div\,}\{\lambda^Se\textbf{1} + 2\mu^S\textbf{e}^S + Q^F\epsilon^F\textbf{1} + Q^G\epsilon^G\textbf{1}\} \\&+\pi^{FS}(\textbf{v}^F - \textbf{v}^S) + \pi^{GS}(\textbf{v}^F - \textbf{v}^S),\\
     \rho_0^F\frac{\partial\textbf{v}^F}{\partial{t}} & = \textrm{grad\,}\{\rho_0^F\kappa^F\epsilon^F + Q^Fe + Q^{FG}\epsilon^G                                           \\&- \pi^{FS}(\textbf{v}^F - \textbf{v}^S)\},\\
     \rho_0^G\frac{\partial\textbf{v}^G}{\partial{t}} & = \textrm{grad\,}\{\rho_0^G\kappa^G\epsilon^G + Q^Ge + Q^{FG}\epsilon^F                                           \\&- \pi^{GS}(\textbf{v}^G - \textbf{v}^S)\},\\
@@ -304,18 +457,21 @@ Finally, solving the balance equations and representing the partial densities in
     \frac{\partial\epsilon^G}{\partial{t}} = \textrm{div\,}\textbf{v}^G, \quad
     e \equiv \textrm{tr\,}\textbf{e}^S                                                                                                                                   \\
     n                                                & = n_0\left[1 + \delta{e} + \frac{\phi^F}{n_0}(e - \epsilon^F) + \frac{\phi^G}{n_0}(e - \epsilon^G)\right]
-\end{align}
+\end{align*}
 
-\subsection{Wave Propagation}
+\section{Wave Propagation}
 Wave analysis is done by assuming the following wave ansatz for the essential fields~\cite{detmann_analysis_2009}:
 
-\begin{gather}
+\begin{gather*}
     \textbf{e}^S = \textbf{E}^S\psi, \quad \epsilon^F = E^F\psi, \quad \epsilon^G = E^G\psi,\\
     \textbf{v}^\theta = \textbf{V}^\theta\psi \quad \text{where $\theta \in \{S, F, G\}$},\\
     n - n_0 = D\psi, \quad \psi \equiv \textrm{exp\,}i(\textbf{k}\cdot\textbf{x} - \omega{t})
-\end{gather}
+\end{gather*}
 
-where $\textbf{E}^S$, $E^{\{F,G\}}$, $\textbf{V}^{\{S, F, G\}}$ and $D$ have constant amplitudes, $\omega$ is a given frequency and $\textbf{k} = k\textbf{n}$ is a wave vector with $\textbf{n}$ being the unit vector in the direction of propagation. The dispersion relations that follow are split into the transverse case and the longitudinal case.
+where $\textbf{E}^S$, $E^{\{F,G\}}$, $\textbf{V}^{\{S, F, G\}}$ and $D$ have constant amplitudes, $\omega$ is a given frequency and $\textbf{k} = k\textbf{n}$ is a wave vector with $\textbf{n}$ being the unit vector in the direction of propagation.
+
+\subsection{Dispersion Relations}
+The dispersion relations that follow from substituting the wave ansatz into the balance equations~\cite{detmann_num_sim_2008} are split into the transverse case and the longitudinal case.
 
 Transverse:
 \begin{align*}
@@ -328,9 +484,9 @@ Transverse:
 \end{align*}
 
 Longitudinal:
-\begin{equation}
+\begin{equation*}
     \sum_{m = 0}^{2} A_m(\omega)\left(\frac{k}{\omega}\right)^{2m} = 0
-\end{equation}
+\end{equation*}
 where the complex coefficients $A_m(\omega)$ are given by:
 \begin{align*}
     A_0(\omega) & = \omega^2 - \pi^{FS}\pi^{GS}\frac{\rho_0^S + \rho_0^F + \rho_0^G}{\rho_0^S\rho_0^F\rho_0^G} \\
@@ -362,200 +518,94 @@ where the complex coefficients $A_m(\omega)$ are given by:
                 & -2\frac{Q^FQ^GQ^{FG}}{\rho_0^S\rho_0^F\rho_0^G}
 \end{align*}
 
-The partial densities are simply related to the real densities of the pure material by:
-$\rho^S = n\rho^{SR}$, $\rho^F = nS\rho^{FR}$, $\rho^G = n(1-S)\rho^{GR}$
-A set of material parameters $\{\lambda^S + (2/3)\mu^S, F, G, Q^F, Q^G, Q^{FG}\}$ appears in the dispersion relations which are dependent on the initial porosity and saturation of the soil. This allows us to investigate the dependence of the wave velocity and attenuation on the soil conditions. $\lambda^S$ and $\mu^S$ are the first and second Lamé constants for the solid grains respectively. The latter is also equivalent to the shear modulus. $F$ and $G$ are the compressibility factor of the two fluids defined as $\kappa = PV_m/RT$ where P is the pressure, $V_m$ is the molar volume, $R$ is the universal gas constant and $T$ is the temperature~\cite{mcquarrie_simon_1999}. By definition, the compressibility factor of an ideal gas is unity. Finally $Q^F$, $Q^G$ and $Q^{FG}$ are the solid-wetting, solid-non-wetting and wetting-non-wetting coupling constants respectively.
+where $\lambda^S$ and $\mu^S$ are the first and second Lamé constants for the solid grains respectively. The latter is also equivalent to the shear modulus. $F$ and $G$ are the compressibility factor of the two fluids defined as $\kappa = PV_m/RT$ where P is the pressure, $V_m$ is the molar volume, $R$ is the universal gas constant and $T$ is the temperature~\cite{mcquarrie_simon_1999}. By definition, the compressibility factor of an ideal gas is unity. Finally $Q^F$, $Q^G$ and $Q^{FG}$ are the solid-wetting, solid-non-wetting and wetting-non-wetting coupling constants respectively.
 
-\section{Numerical Simulation}
+The partial densities are simply related to the real densities of the pure material by:
+\begin{equation*}
+    \rho^S = n\rho^{SR},\quad \rho^F = nS\rho^{FR},\quad \rho^G = n(1-S)\rho^{GR}
+\end{equation*}
+
+\section{Simulation of Detection Range}
 The dispersion relations obtained in the previous section can be solved for the complex wavenumber. The wave velocity and attenuation coefficient can be calculated from the complex wavenumber $\textbf{k}$ as follows:
 
-\begin{align}
+\begin{align*}
     v      & = \frac{\omega}{|real(\textbf{k})|} \\
     \alpha & = |im(\textbf{k})|
-\end{align}
+\end{align*}
 
 where $v$ is the phase speed and $\alpha$ is the attenuation coefficient.
 
-In this section, numerical results for a particular sandstone-water-gas mixture are presented. The phase speed and attenuation coefficient of the acoustic waves are plotted against soil saturation and also against frequency.
+In this section, numerical results for a particular sandstone-water-gas mixture are presented. The dispersion relations had been solved for the complex wavenumber $k$ as a function of angular frequency of the wave and soil saturation in the sandstone-water-gas case. The phase speed and attenuation coefficient of the acoustic waves were plotted against soil saturation and against frequency.
 
-Prior to obtaining numerical results for the wavenumber, there are parameters in the dispersion relations that are yet undefined. These are the set of material parameters $\{\lambda^S + (2/3)\mu^S, F, G, Q^F, Q^G, Q^{FG}\}$. Following the approach used by Detmann~\cite{detmann_analysis_2009}, these macroscopic material parameters can be derived from a set of microscopic parameters that are dependent on the microstructure of the bulk material. This is done by borrowing the relations from Santos, Corbero and Douglas~\cite{santos_corbero_douglas_1990}. In Santos et al.’s approach, the set of material parameters ${K_c^*, B_1, B_2, M_1, M_2, M_3}$ that were used are different from those appearing in the dispersion relations. Detman shows, however, that these have a simple relationship with the set of parameters $\{\lambda^S + (2/3)\mu^S, F, G, Q^F, Q^G, Q^{FG}\}$ that we wish to evaluate.
+\subsection{Frequency Dependence}
+In Figure~\ref{fig:final_s} and \ref{fig:frequency_p}, the phase speed and attenuation coefficient were plotted against frequency for saturation values $S = [0.2, 0.4, 0.6, 0.8, 0.99999]$ and for each wave mode. The frequency range chosen was the audible range between \SIrange{20}{20e3}{\hertz}. It can be seen that the values of the attenuation coefficients for the $S$ and $P1$ waves are several orders of magnitude lower than that the $P2$ and $P3$ waves within the frequency range of interest. The $P1$ wave is the fastest of all the wave modes which supports earlier findings that the $P1$ wave is a compressional wave transmitted mainly through the solid skeleton. $P3$ is the slowest wave and is most heavily attenuated as it is due to weak interactions between the pore fluids. The speed of the $P2$ wave when saturation is high roughly corresponds to the speed of sound in water as this wave is primarily transmitted through the water phase.
 
-It is important to note here that the capillary pressure implicitly enters the dispersion relation via these parameters. The dependence of capillary pressure on soil saturation can be obtained empirically through experiments or via closed-form equations such as those proposed by Santos et al. or van Genuchten~\cite{van_genuchten_1980}. The former is chosen for this simulation and is shown in Figure~\ref{fig:capillary_santos}.
+\subsection{Saturation Dependence}
+In Figure~\ref{fig:final_s} and \ref{fig:saturation_p}, the phase speed and attenuation coefficient were plotted against saturation for frequency values $S = [20, 100, 1000, 5000, 20000]$ and for each wave mode.
 
-\begin{figure}
-    \centering
-    \includegraphics[width = \columnwidth]{figures/capillary_santos.eps}
-    \caption{Plot of Santos' capillary pressure}
-    \label{fig:capillary_santos}
-\end{figure}
-
-\begin{equation}
-    p_c = p_{c_r}e^{-AS_{o_r}}\bigl(e^{-AS_o} - 1\bigr)
-\end{equation}
-
-where $A = \num{6.029158}$, $S_{o_r} = \num{0.519}$, $p_{c_r}=\num{0.0000026509109e9}$. Calculating Santos et al.’s parameters with the capillary relation above and mapping the results to the Detman material parameters using equations [ref relation] yield a relationship between the material parameters and soil saturation. Figure~\ref{fig:detmann_param_gas} shows the parameters for the case of a sandstone-water-gas mixture. The sandstone skeleton and the pore fluids have the following properties:
-
-\begin{align} \label{eq:skeleton-properties}
-     & n_0 = \num{0.25},~\rho_0^{SR} = \SI{2650}{\kilo\gram\per\cubic\metre},~K^S = \SI{48109}{\pascal}, \\
-     & K^d = \frac{K^S}{1 + gn_0},~g = \num{50},~k = \SI{1d-7}{\square\metre}
-\end{align}
-
-\begin{table}
-    \caption{caption}
-    \label{t:material-properties}
-    \centering
-    \begin{tabular}{lcc}
-        \toprule
-                                                                     & water          & gas           \\\otoprule
-        $\rho_0^{\theta{R}}(\si{\kg\per\cubic\m})$                   & $\num{1000}$   & $\num{100}$   \\
-        $K^\theta (\si{\pascal})$                                    & $\num{2.25e9}$ & $\num{2.2e7}$ \\
-        $\mu^\theta (\si{\milli\pascal\second}), 20^\circ\textrm{C}$ & $\num{1}$      & $\num{0.015}$ \\
-        \bottomrule
-    \end{tabular}
-\end{table}
-
-where $n_0$ is the initial porosity, $\rho_0^{SR}$ is the true density of the material with zero porosity, $K^S$ is the bulk modulus of the grains and $K^d$ is the drained modulus which represents the bulk modulus of the empty matrix. The constant g is a fitting constant that is found by fitting the expression with experimental data obtained from different soil types~\cite{white_1983}.
+\section{Detection Range Map}
+The detection range for different combinations of saturation and frequency was calculated. The detection range is inversely proportional to the attenuation coefficient. The contour plots of saturation against frequency in Figure~\ref{fig:detect_range_s} and \ref{fig:detect_range_p1} show the detection range for the $S$ and $P1$ waves respectively. As these waves are much less heavily attenuated than the $P2$ and $P3$ waves, they are the most likely waves to be detected in the fields. For frequencies around \SI{3}{\kHz} which are the frequencies of interest for the detection of chafer grubs, we see that the detection range is of order \SI{100}{\m} for the $S$ wave. This behaviour is not observed in practice as the typical detection range was determined in previous work~\cite{mankin_hubbard_weaver_2000} to be approximately \SI{50}{\cm}. The plot for the $P2$ wave, which is the compressional wave transmitted through the soil skeleton, more closely reflects this observation.
 
 \begin{figure}
     \centering
-    \includegraphics[width = \columnwidth]{figures/detmann_param_gas.eps}
-    \caption{Plot of Detmann's material parameters}
-    \label{fig:detmann_param_gas}
+    \includegraphics[width = \columnwidth]{figures/detect_range_s.eps}
+    \caption{Contour plot of detection range for a matrix of frequency and saturation in the S wave case.}
+    \label{fig:detect_range_s}
 \end{figure}
-
-Finally, wave propagation also depends on the resistance parameters $\pi$. These are related to the permeability parameter (see permeability) by $\pi = \eta/k$ where $\eta$ is the viscosity of the fluid and $k$ is the permeability parameter for the soil. This describes the resistance of the porous material against the flow of the fluid. It is assumed that the resistance parameter for the fluid mixture can be separated into the effective resistance for the water and gas
-
-\begin{equation}
-    \pi^{FS}= \frac{\pi^F}{k^F}\quad \text{and} \quad \pi^{GS}=\frac{\pi^G}{k^G}
-\end{equation}
-
-where $\pi^{FS}$ and $\pi^{GS}$ are the effective resistances, $\pi^F$ and $\pi^G$ are the experimentally determined resistance parameters of each fluid. $k^F$ and $k^G$ are the relative permeabilities which depend on saturation. The theoretical relationship as proposed by van Genuchten~\cite{van_genuchten_1980} that fits with experimentally determined behaviour~\cite{wyckoff_botset_1936} are given by
-
-\begin{equation}
-    k^F = S^{\frac{1}{2}}\bigl[1 - \bigl(1-S^{\frac{1}{m}}\bigr)^m\bigr]^2 \quad \text{and} \quad
-    k^G = (1-S)^{\frac{1}{3}}\bigl(1 - S^{\frac{1}{m}}\bigr)^{2m}
-\end{equation}
-
-where $m = \num{0.85}$, a fitting parameter. Figure~\ref{fig:permeability} shows the relative permeabilities plot.
 
 \begin{figure}
     \centering
-    \includegraphics[width = \columnwidth]{figures/permeability.eps}
-    \caption{Relative permeabilities}
-    \label{fig:permeability}
+    \includegraphics[width = \columnwidth]{figures/detect_range_p1.eps}
+    \caption{Contour plot of detection range for a matrix of frequency and saturation in the $P1$ wave case.}
+    \label{fig:detect_range_p1}
 \end{figure}
 
-\subsection{Velocity, Attenuation and Detection Range}
-The dispersion relations have been solved for the complex wavenumber k as a function of angular frequency of the wave and soil saturation in the sandstone-water-gas case. In Figure~\ref{fig:frequency_s}, the phase speed and attenuation coefficient are plotted against frequency and in Figure~\ref{fig:saturation_p} against saturation. The contour plots of saturation against frequency in Fig(ref) shows, for the transverse wave case, the region within the frequency range of interest where detection range is maximal.
+
+\section{Conclusion}
+In this work, we set out to build a device to detect and model the weak signal produced by chafer beetles. It became apparent from the measurement of amplitude decay against relative separation from the source that the model system displays more complex behaviour than originally assumed. A first glance at the form of these amplitude decays, both along the axis normal to the speaker and at an angle, there appears to be geometric factors that have not been taken into account by the simple plane wave model. Future work may look at whether superposition of effects such as diffraction and reflection off surfaces would be able to predict such an amplitude decay.
+
+Numerical simulation of wave propagation in soil was able to predict detection ranges for different values of soil saturation and wave frequency. For frequencies corresponding to the range present in the spectral analysis of chafer beetle recordings, the range of detection was of order \SI{50}{\cm} for all values of soil saturation.
+
+The findings of this work overall confirms the difficulty in detecting weak signals produced by soil-dwelling insects. Even without loud background noise from wind or vehicles, the fact that soil itself is a composite material with complex microstructures means that more work is needed to understand the different wave modes supported by the medium.
+
+\section*{Acknowledgements}
+I would like to thank Dr Christopher Lester for his thoughtful guidance throughout my entire project and Richard King for his advice on building electrical circuits and his understanding support during the Covid-19 lockdown. I would also like to thank John Flynn and his wife for interesting insights on preparing soil samples and Andy Irvine for lending me several Arduino UNO units for the experiment. Finally, I thank Richard Mankin and Bettina Detmann for providing helpful clarifications in their respective fields of expertise.
+
+\section*{Source Code}
+The source code for this project is available at https://github.com/tigeryst/ALCBL.
 
 \begin{figure}
     \centering
-    \includegraphics[width = \columnwidth]{figures/frequency_s.eps}
-    \caption{Plot against frequency}
-    \label{fig:frequency_s}
+    \onecolumn\includegraphics[width = 0.8\textwidth]{figures/tryformat.eps}
+    \caption{Plot of attenuation and speed against frequency and against saturation for S wave.}
+    \label{fig:final_s}
 \end{figure}
+\twocolumn
 
-\begin{figure*}[t]
+\begin{figure}
     \centering
-    \includegraphics[height = \textheight]{figures/saturation_p.eps}
-    \caption{Plot against saturation}
+    \onecolumn\includegraphics[height = 0.8\textheight]{figures/frequency_p.eps}
+    \caption{Plot of attenuation and speed against frequency. From top to bottom - $P1$, $P2$, $P3$.}
+    \label{fig:frequency_p}
+\end{figure}
+\twocolumn
+
+\begin{figure}
+    \centering
+    \onecolumn\includegraphics[height = 0.8\textheight]{figures/saturation_p.eps}
+    \caption{Plot of attenuation and speed against saturation. From top to bottom - $P1$, $P2$, $P3$.}
     \label{fig:saturation_p}
-\end{figure*}
-
-\subsection{Remarks}
-I demonstrated in this numerical simulation section that given the material parameters shown in Table~\ref{t:material-properties} and Equations~\ref{eq:skeleton-properties}, which are measurable quantities of the constituent materials of the soil, and expressions for capillary pressure pc and relative permeabilities, $k^F$ and $k^G$, in terms of saturation, it is possible to predict the wave velocity and attenuation coefficients for a given frequency and soil saturation. If the dependence of $p_c$, $k^F$ and $k^G$ on porosity is also known, it would be possible to have porosity as another independent variable.
-
-Figure~\ref{fig:detmann_param_gas} shows the behaviour of the material parameters as saturation is varied. The parameter $\lambda^S + (2/3)\mu^S$ is roughly independent of saturation which is expected as this is a property of the solid skeleton and therefore is not influenced by the composition of the pore fluids. The parameters relating to each pore fluid also behave as expected with the sandstone-water coupling constant and the compressibility factor of the water reaching a maximum but finite value when the soil is saturated with water $(S = 1)$ and going to zero when there is no water in the pores $(S = 0)$. The analogue is true for the parameters relating to the existence of the gas. The coupling constant QFG between the fluids is zero when either one of the fluids disappears and is maximum near intermediate saturation values.
-
-Figures~\ref{fig:saturation_p} attempt to replicate results from~\cite{detmann_num_sim_2008}. However, the non-smooth variations at extreme values of frequencies and saturations point towards non-convergence or convergence to the wrong roots for k in the numerical solutions. For intermediate values of saturation and frequencies, the plots are well behaved. It is noted in Detmann’s work~\cite{detmann_analysis_2009} that limitations to the model exist for very low saturation values. In this low saturation regime, the water can no longer be assumed to be continuous as the structure of the fluid mixture is frothy.
-
-\section{Experimental Methods}
-The aim of the experimental section is to demonstrate the methods that can be used to verify key results from the three-component model and to investigate how the wave speed and attenuation depend on porosity. The latter is not currently predicted by the model.
-
-The experiment had not reached a stage suitable for soil testing at the time of the Covid-19 lockdown and therefore the soil preparation methods are included below as experimental plans in the interest of completeness.
-Soil Preparation
-In Cambridge, the soil composition is a mixture of freely draining lime-rich loamy soil and lime-rich clayey soil with impeded draining~\cite{landis_2004,rhs_gardening_2009}. The soil selected is loamy clay soil commonly used for lawn preparation, representative of that found in the area.
-
-The process of soil preparation will involve sifting, compacting and watering. The soil sample will be prepared by passing the sample through a sieve to exclude large materials $> \SI{4}{\milli\m}$. To avoid having to air-dry the sample for one week prior to introducing known volume of water, as often done in literature~\cite{brien_darmody_2002}, the saturation of the soil can be determined through a method based on water extraction as will be described in detail. To vary porosity and saturation, an arbitrary volume of water is added to the sieved sample and an arbitrary compacting force is applied.
-
-Measurement of the microstructural variables---namely porosity and saturation---will be done by excavating two samples of soil immediately after acoustic measurements are performed. One sample undergoes the porosity measurement while the other is measured for water content.
-
-A crude experimental method to determine porosity is by saturating the soil by adding water until the water level just reaches the soil surface. Using this method, there will be residual air~\cite{adamski_kremesec_charbeneau_2005} in the pores due to excess atmospheric pressure (see Capillary pressure). The small error introduced by this residual pressure does not limit precision of the experiment. The mass of the saturated sample is recorded. The sample is then dried on a hot plate, again leaving residual water in the pores held by capillary pressure. The dry mass is measured. Since the density of water is a known quantity, the pore space is related to the change in mass by $n = (\text{saturated mass} - \text{dry mass}) / \rho^F$.
-
-Saturation is determined in a similar fashion but this time by subtracting the dry mass instead from the initial mass of the wet but unsaturated soil. $n = (\text{unsaturated mass} - \text{dry mass}) / \rho^F$.
-Source and Detector
-Calibration (control voltage-freq, freq-freq, freq-amplitude)
-Why chose electret microphone for detector~\cite{mankin_hubbard_weaver_2000}
-Why piezoelectric speaker
-Producing the bass
-Chosen to omit the steel stakes because want direct coupling between the detector and the
-Signal Processing
-Amplification, Bandpass Filter, Differential Op-Amp
-Velocity and Attenuation
-Velocity determined using phase shift between input signal and measured signal
-Phase shift = kx - wt + extra constant phase shift introduced by circuit and components
-If we just plot phase shift against the relative distance between speaker and microphone then k just the gradient
-Velocity is then v = w/k
-Attenuation can be determined by plotting x against log(amplitude) where the voltage output measured from the microphone is directly proportional to the pressure of the sound wave (ref datasheet for microphone)
-Note on attenuation: effects of reflection and diffraction
-Noise
-Twisting wires - so that they trace the same path in space and so effects from the external EM field would affect each wire equally and so does not affect measured potential difference.
-Isolating circuits
-Decoupling capacitors
-Possible reflections from walls and objects nearby
-Results
-Calibration
-A control voltage was input into the function generator to electronically control the frequency of the speaker. Below the control voltage from the user interface is plotted against the measured voltage input to the function generator (fig 10). Figure 11 shows the frequency measured vs the control voltage. We see that the setup can achieve a frequency range between 4 - 12 kHz which is more than enough for our range of interest.
-
-Fig 10.
-
-Fig 11.
-
-Speed of Sound in Air
-A trial measurement was done in air to see if the setup works
-We know the expected result for speed of sound in air so this would be a sensible sanity check
-
-Fig 12.
-The phase speed was calculated from this plot. The wavenumber k is the gradient of the line. Frequency used was 1515 Hz giving speed 344 +- errors $ms^-1$.
-
-The measured amplitude is plotted against relative distance between the speaker and the microphone. We expected an exponential decay but as can be seen in figure 13 and 14, there are other effects that come into play. These could be due to diffraction or dispersion of the sound wave (since the sound wave is not a plane wave).
-With the current data, it would not be possible to calculate the attenuation coefficient
-
-
-Off-axis case
-
-Fig 13.
-On-axis case
-
-Fig 14.
-Discussion
-Comment on reliability of source and detector system - sensitivity, noise to signal ratio, frequency range where response is linear
-Extended source hypothesis - the non-exponential nature in Fig 13 and 14 might be due to the fact that the speaker is not a plane wave source
-Conclusion
-Reflection on COVID-19
-Future Direction of experiment
-Trying with steel stake as waveguides, coupling vibration from soil to detector attached to stake (see how that improves range - in our case, got really good signal to noise ratio anyways)
-Introduce noise (wind, trucks)
-Algorithm to detect signal by considering the fact that insect sounds come in short bursts as opposed to constant wind noise and also the frequency spectrum of wind and vehicles drops more sharply for f > 400 Hz
-Multiple sources and triangulation (ref triangulation)
-Possible improvements, assumptions to test
-Thing with potential divider problem when connecting to input sweep
-Choosing how much the signal is amplified by
-Circuit board not completely independent (electrical noise)
-Results summary
-Numerical result shows sensible behaviour predicted by the three-component model
-The attenuation coefficient predicted by the model agrees with experimental findings: S and P1 waves not significantly attenuated so can be detected while P2 and P3 waves are difficult to detect in experiments
-Model predicts what happens to the attenuation and speed of plane acoustic waves in soil if saturation and frequency is varied but not enough information is available to predict dependence on porosity.
-Learned many things setting up the experiment especially debugging electrical circuits and signal processing
-The experiment which was meant to verify attenuation and phase speed relationships did not end up working for attenuation measurements but was able to measure wave speed quite easily using phase difference between the wave emitted at the speaker and that detected at the microphone
-More work needs to be done to understand why the attenuation curve does not display the usual exponential decay
-References
-Appendix
-Calibration
-Derivation of equations
-Electrical component values
-Python code
+\end{figure}
+\twocolumn
 
 \printbibliography
+
+% \appendix
+% \appendixpage
+% \addappheadtotoc
+
+% \section{Derivation of equations}
+% \section{Python code}
+% \section{Labview Code}
 
 \end{document}
