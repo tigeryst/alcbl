@@ -1,0 +1,933 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 12.1' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     33051,        925]
+NotebookOptionsPosition[     31354,        887]
+NotebookOutlinePosition[     31749,        903]
+CellTagsIndexPosition[     31706,        900]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["\<\
+Numerical Investigation of Longitudinal Waves in Unsaturated Porous Media\
+\>", "Title",
+ CellChangeTimes->{{3.7966554269624577`*^9, 
+  3.7966555118534327`*^9}},ExpressionUUID->"da2c0fb4-6938-4e14-946d-\
+7bce75a391f3"],
+
+Cell[CellGroupData[{
+
+Cell["Configuration", "Section",
+ CellChangeTimes->{{3.7966555154409313`*^9, 
+  3.796655540365707*^9}},ExpressionUUID->"a36ac808-d305-4d1c-910b-\
+ec1b3ed6314c"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", " ", 
+   RowBox[{
+   "Configuration", " ", "section", " ", "for", " ", "adjusting", " ", 
+    "constants", " ", "depending", " ", "on", " ", "soil", " ", "and", " ", 
+    "fluid", " ", "types"}], " ", "*)"}], "\[IndentingNewLine]", "\n", 
+  RowBox[{"(*", " ", 
+   RowBox[{"===", 
+    RowBox[{"Define", " ", "material", " ", "parameters", " ", 
+     RowBox[{"experimentally", "/", "empirically"}], " ", "obtained"}], 
+    "==="}], " ", "*)"}], 
+  RowBox[{"(*", " ", 
+   RowBox[{"True", " ", "compressibility", " ", "moduli", " ", 
+    RowBox[{"(", "microscopic", ")"}]}], " ", "*)"}], "\n", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"Ks", "=", "48*^9"}], ";"}], "                 ", 
+   RowBox[{"(*", " ", 
+    RowBox[{"solid", "-", "sandstone"}], " ", "*)"}], "\n", 
+   RowBox[{
+    RowBox[{"Kf", "=", "2.25*^9"}], " ", ";", "           ", 
+    RowBox[{"(*", " ", 
+     RowBox[{"fluid", "-", "water"}], " ", "*)"}], "\n", "\n", 
+    RowBox[{"(*", " ", 
+     RowBox[{"True", " ", 
+      RowBox[{"(", "microscopic", ")"}], " ", "densities"}], " ", "*)"}], 
+    "\[IndentingNewLine]", 
+    RowBox[{"rhoSR0", "=", "2650"}], " ", ";"}], "        ", 
+   RowBox[{"(*", " ", "sandstone", " ", "*)"}], "\n", 
+   RowBox[{
+    RowBox[{"rhoFR0", "=", "1000"}], " ", ";"}], "       ", 
+   RowBox[{"(*", " ", "water", " ", "*)"}], "\n", "\n", 
+   RowBox[{"(*", " ", 
+    RowBox[{"Shear", " ", "modulus", " ", 
+     RowBox[{"(", 
+      RowBox[{"second", " ", "lame", " ", "constant"}], ")"}], " ", "for", 
+     " ", "sandstone"}], " ", "*)"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"muS", "=", "1641041323"}], ";"}], "\n", "\n", 
+   RowBox[{"(*", " ", 
+    RowBox[{"Viscosity", " ", "dependent", " ", "parameters"}], " ", "*)"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"piF", "=", "1*^7"}], ";", "          ", 
+    RowBox[{"(*", " ", "water", " ", "*)"}], "\n", "\[IndentingNewLine]", 
+    RowBox[{"(*", " ", 
+     RowBox[{
+     "g", " ", "parameter", " ", "for", " ", "empirical", " ", "expression", 
+      " ", "of", " ", "drained", " ", "compressibility", " ", "modulus", " ", 
+      "Kd"}], " ", "*)"}], "\n", 
+    RowBox[{"g", "=", "50"}], ";"}], "\[IndentingNewLine]", "\n", 
+   RowBox[{"(*", " ", 
+    RowBox[{"===", 
+     RowBox[{"Define", " ", "initial", " ", "conditions"}], "==="}], " ", 
+    "*)"}], 
+   RowBox[{"(*", " ", 
+    RowBox[{
+    "Initial", " ", "pressure", " ", "corresponding", " ", "to", " ", 
+     "microscopic", " ", "relative", " ", "volume", " ", "changes"}], " ", 
+    "*)"}], "\n", 
+   RowBox[{
+    RowBox[{"pSR0", "=", "0"}], " ", ";", "           ", 
+    RowBox[{"(*", " ", "skeleton", " ", "*)"}], "\n", 
+    RowBox[{"pFR0", "=", "0"}], " ", ";", "           ", 
+    RowBox[{"(*", " ", "gas", " ", "*)"}], "\n", "\[IndentingNewLine]", 
+    RowBox[{"(*", " ", 
+     RowBox[{"Initial", " ", "porosity"}], " ", "*)"}], "\n", 
+    RowBox[{"(*", " ", 
+     RowBox[{
+     "Defined", " ", "as", " ", "ratio", " ", "of", " ", "volume", " ", "of", 
+      " ", "void", " ", "to", " ", "bulk", " ", "volume"}], " ", "*)"}], "\n", 
+    RowBox[{"n0", "=", "0.25"}], ";"}], "        ", 
+   RowBox[{"(*", " ", 
+    RowBox[{"depends", " ", "on", " ", "compaction", " ", "of", " ", "soil"}],
+     " ", "*)"}], "\n", "\n", 
+   RowBox[{"(*", " ", 
+    RowBox[{
+    "Small", " ", "positive", " ", "value", " ", "close", " ", "to", " ", 
+     "zero"}], " ", "*)"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"epsilon", "=", 
+     RowBox[{
+      RowBox[{"1", "E"}], "-", "5"}]}], ";"}]}]}]], "Input",
+ CellChangeTimes->{{3.7966555475778103`*^9, 3.796655658602654*^9}, {
+  3.796658141315909*^9, 3.796658172771193*^9}, {3.79665824784232*^9, 
+  3.7966583518771152`*^9}, {3.796658494618372*^9, 3.796658504458743*^9}, {
+  3.796658536917326*^9, 3.796658558197772*^9}},
+ CellLabel->
+  "In[132]:=",ExpressionUUID->"25e20e3e-9291-4948-a4a3-b3e806f6d3ec"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Useful Functions", "Section",
+ CellChangeTimes->{{3.796655706447579*^9, 
+  3.7966557094914207`*^9}},ExpressionUUID->"4b9eedbd-931f-4e5a-8c14-\
+e369a9f3324e"],
+
+Cell[CellGroupData[{
+
+Cell["Capillary Pressure", "Subsection",
+ CellChangeTimes->{{3.7966557388700457`*^9, 
+  3.7966557491321898`*^9}},ExpressionUUID->"da00e21e-ffaa-4efb-bfff-\
+ced7a7eb1b98"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"capillary", "[", 
+    RowBox[{"{", 
+     RowBox[{"S_", ",", "mode_"}], "}"}], "]"}], ":=", "\[IndentingNewLine]", 
+   
+   RowBox[{"(*", " ", 
+    RowBox[{
+    "Evaluate", " ", "the", " ", "capillary", " ", "pressure", " ", "and", 
+     " ", "its", " ", "first", " ", "derivative"}], " ", "*)"}], 
+   RowBox[{"(*", " ", 
+    RowBox[{
+    "Mode", " ", "indicates", " ", "capillary", " ", "expression", " ", "to", 
+     " ", 
+     RowBox[{"use", ":"}]}], " ", "*)"}], "\[IndentingNewLine]", 
+   RowBox[{"(*", " ", 
+    RowBox[{"0", "-", 
+     RowBox[{"van", " ", "Genuchten"}]}], " ", "*)"}], "\[IndentingNewLine]", 
+   
+   RowBox[{"(*", " ", 
+    RowBox[{"1", "-", "Santos"}], " ", "*)"}], "\[IndentingNewLine]", 
+   RowBox[{"(*", " ", 
+    RowBox[{
+     RowBox[{"Return", "[", 
+      RowBox[{"capillary", " ", "pressure"}], "]"}], ",", 
+     RowBox[{"[", 
+      RowBox[{"first", " ", "derivative", " ", 
+       RowBox[{"w", ".", "r", ".", "t", ".", "water"}], " ", "saturation"}], 
+      "]"}]}], " ", "*)"}], 
+   RowBox[{"Module", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+      "mvG", ",", " ", "nvG", ",", " ", "alphavG", ",", " ", "A", ",", " ", 
+       "Sor", ",", " ", "pcr", ",", " ", "So", ",", " ", "p", ",", " ", 
+       "dpdS"}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"Which", "[", 
+      RowBox[{
+       RowBox[{"mode", "\[Equal]", "0"}], ",", 
+       RowBox[{"(", "\[IndentingNewLine]", 
+        RowBox[{"(*", " ", 
+         RowBox[{
+         "Relation", " ", "based", " ", "on", " ", "van", " ", "Genuchten", 
+          " ", "equation"}], " ", "*)"}], "\[IndentingNewLine]", 
+        RowBox[{"(*", " ", 
+         RowBox[{"mvG", ",", 
+          RowBox[{
+          "nvG", " ", "and", " ", "alphavG", " ", "are", " ", "material", " ",
+            "dependent", " ", "fitting", " ", "parameters"}]}], " ", "*)"}], 
+        "\n", "\t    ", 
+        RowBox[{
+         RowBox[{"mvG", "=", "0.5"}], ";", "\n", "\t    ", 
+         RowBox[{"nvG", "=", "2"}], ";", "\n", "\t    ", 
+         RowBox[{"alphavG", "=", "0.00005"}], ";", "\[IndentingNewLine]", 
+         RowBox[{"(*", " ", 
+          RowBox[{"Capillary", " ", "pressure"}], " ", "*)"}], "\n", "\t    ", 
+         RowBox[{"p", "=", 
+          RowBox[{
+           RowBox[{"1", "/", "alphavG"}], "*", 
+           RowBox[{
+            RowBox[{"(", 
+             RowBox[{
+              RowBox[{"S", "^", 
+               RowBox[{"(", 
+                RowBox[{
+                 RowBox[{"-", "1"}], "/", "mvG"}], ")"}]}], "-", "1"}], ")"}],
+             "^", 
+            RowBox[{"(", 
+             RowBox[{"1", "/", "nvG"}], ")"}]}]}]}], ";", "\n", "\t    ", 
+         RowBox[{"dpdS", "=", 
+          RowBox[{
+           RowBox[{"-", 
+            RowBox[{"(", 
+             RowBox[{
+              RowBox[{"1", "/", "alphavG"}], "*", "nvG", "*", "mvG"}], 
+             ")"}]}], "*", 
+           RowBox[{
+            RowBox[{"(", 
+             RowBox[{"alphavG", "*", "p"}], ")"}], "^", 
+            RowBox[{"(", 
+             RowBox[{"nvG", "/", 
+              RowBox[{"(", 
+               RowBox[{"nvG", "-", "1"}], ")"}]}], ")"}]}], "*", 
+           RowBox[{"S", "^", 
+            RowBox[{"(", 
+             RowBox[{
+              RowBox[{"(", 
+               RowBox[{
+                RowBox[{"-", "1"}], "/", "mvG"}], ")"}], "-", "1"}], 
+             ")"}]}]}]}], ";", "\n", "\t    ", 
+         RowBox[{"Return", "[", 
+          RowBox[{"{", " ", 
+           RowBox[{"p", ",", "dpdS"}], "}"}], "]"}]}], "\[IndentingNewLine]", 
+        ")"}], ",", " ", 
+       RowBox[{"mode", " ", "\[Equal]", " ", "1"}], ",", " ", 
+       RowBox[{"(", "\[IndentingNewLine]", 
+        RowBox[{"(*", " ", 
+         RowBox[{
+          RowBox[{"Fitting", " ", "parameters", " ", "A"}], ",", "Sor", ",", 
+          "pcr"}], " ", "*)"}], "\n", "            ", 
+        RowBox[{
+         RowBox[{"A", "=", "6.029158"}], ";", "\n", "            ", 
+         RowBox[{"Sor", "=", "0.519"}], ";", "\n", "            ", 
+         RowBox[{"pcr", "=", "0.0000026509*^10"}], ";", "\n", "            ", 
+         
+         RowBox[{"So", "=", 
+          RowBox[{"1", "-", "S"}]}], ";", "\n", "            ", 
+         RowBox[{"p", "=", 
+          RowBox[{"pcr", "*", "Exp", 
+           RowBox[{"(", 
+            RowBox[{
+             RowBox[{"-", "A"}], "*", "Sor"}], ")"}], "*", 
+           RowBox[{"(", 
+            RowBox[{
+             RowBox[{"Exp", 
+              RowBox[{"(", 
+               RowBox[{
+                RowBox[{"-", "A"}], "*", "So"}], ")"}]}], "-", "1"}], 
+            ")"}]}]}], ";", "\n", "            ", 
+         RowBox[{"dpdS", "=", 
+          RowBox[{"A", "*", "pcr", "*", "Exp", 
+           RowBox[{"(", 
+            RowBox[{
+             RowBox[{"-", "A"}], "*", "Sor"}], ")"}], "*", "Exp", 
+           RowBox[{"(", 
+            RowBox[{
+             RowBox[{"-", "A"}], "*", "So"}], ")"}]}]}], ";", "\n", 
+         "            ", 
+         RowBox[{"Return", " ", "[", 
+          RowBox[{"{", 
+           RowBox[{"p", ",", "dpdS"}], "}"}], "]"}], ";"}], 
+        "\[IndentingNewLine]", ")"}], ",", " ", "TRUE", ",", " ", 
+       RowBox[{"Return", "[", 
+        RowBox[{"{", 
+         RowBox[{"0", ",", " ", "0"}], "}"}], "]"}]}], "]"}]}], 
+    "\[IndentingNewLine]", "]"}]}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"capillary", "[", 
+   RowBox[{"{", 
+    RowBox[{"S", ",", " ", "0"}], "}"}], "]"}], "[", 
+  RowBox[{"[", "1", "]"}], "]"}], "\[IndentingNewLine]", 
+ RowBox[{"plot", "[", 
+  RowBox[{
+   RowBox[{
+    RowBox[{
+     RowBox[{"capillary", "[", 
+      RowBox[{"S", ",", "0"}], "]"}], "[", 
+     RowBox[{"[", "1", "]"}], "]"}], "/.", 
+    RowBox[{"S", " ", "\[Rule]", " ", "u"}]}], ",", 
+   RowBox[{"{", 
+    RowBox[{"u", ",", "0", ",", "1"}], "}"}]}], "]"}]}], "Input",
+ CellChangeTimes->{{3.7966557195539827`*^9, 3.7966557195624104`*^9}, {
+   3.796655802506567*^9, 3.796655824879753*^9}, {3.796655887307365*^9, 
+   3.796655888531456*^9}, {3.796656461070745*^9, 3.796656511727148*^9}, {
+   3.7966566412824793`*^9, 3.7966566429481087`*^9}, {3.796656693349266*^9, 
+   3.796656757964919*^9}, {3.796657018421797*^9, 3.796657032223383*^9}, {
+   3.796657130191308*^9, 3.796657301674959*^9}, {3.796657336838397*^9, 
+   3.7966573565165586`*^9}, {3.796657583245317*^9, 3.796657604187261*^9}, {
+   3.796657642552229*^9, 3.7966576505532923`*^9}, {3.796657696354644*^9, 
+   3.796657976849365*^9}, {3.796658034441286*^9, 3.796658035471406*^9}, {
+   3.796658363942399*^9, 3.796658382844646*^9}, {3.796658446628233*^9, 
+   3.7966584829279413`*^9}, {3.7966585939445047`*^9, 3.796658606348782*^9}, {
+   3.796658654611973*^9, 3.796658693680306*^9}, {3.7966587529905987`*^9, 
+   3.7966587579858227`*^9}, {3.796658803054792*^9, 3.796658814203527*^9}, 
+   3.796658881438746*^9, {3.796659031618582*^9, 3.7966590518805637`*^9}, {
+   3.796659145790098*^9, 3.7966591507154713`*^9}, {3.796660588917446*^9, 
+   3.796660663174844*^9}, {3.7966611012286787`*^9, 3.796661114354713*^9}},
+ CellLabel->
+  "In[129]:=",ExpressionUUID->"87f2a57b-e4f5-4082-abb2-7be57b689db8"],
+
+Cell[BoxData[
+ RowBox[{"20000.`", " ", 
+  SqrtBox[
+   RowBox[{
+    RowBox[{"-", "1"}], "+", 
+    FractionBox["1", 
+     SuperscriptBox["S", "2.`"]]}]]}]], "Output",
+ CellChangeTimes->{
+  3.7966590619418163`*^9, 3.796659111897416*^9, 3.796660726302924*^9, 
+   3.7966608341606827`*^9, {3.796660865310289*^9, 3.79666091348237*^9}, {
+   3.796660950692913*^9, 3.79666097344309*^9}, 3.796661114689904*^9},
+ CellLabel->
+  "Out[130]=",ExpressionUUID->"55ff7551-72c4-4a14-8324-c98cb320e3ff"],
+
+Cell[BoxData[
+ RowBox[{"plot", "[", 
+  RowBox[{"u", ",", 
+   RowBox[{"{", 
+    RowBox[{"u", ",", "0", ",", "1"}], "}"}]}], "]"}]], "Output",
+ CellChangeTimes->{
+  3.7966590619418163`*^9, 3.796659111897416*^9, 3.796660726302924*^9, 
+   3.7966608341606827`*^9, {3.796660865310289*^9, 3.79666091348237*^9}, {
+   3.796660950692913*^9, 3.79666097344309*^9}, 3.79666111469372*^9},
+ CellLabel->
+  "Out[131]=",ExpressionUUID->"72197d03-2706-490c-b28c-4aa77e7b3cf5"]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Permeability", "Subsection",
+ CellChangeTimes->{{3.796658056607049*^9, 
+  3.796658058581708*^9}},ExpressionUUID->"6b18c760-5a44-4ca9-bd63-\
+16fd274a9daf"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"def", " ", "permeability", 
+   RowBox[{"(", "S", ")"}]}], ":", 
+  RowBox[{
+  "#", " ", "Evaluate", " ", "relative", " ", "permeability", " ", "as", " ", 
+   "a", " ", "function", " ", "of", " ", "saturation"}]}], "\n", 
+ RowBox[{"#", " ", "Measurement", " ", "by", " ", "Wyckoff", " ", "and", " ", 
+  "Botset", " ", "and", " ", "relation", " ", "from", " ", "van", " ", 
+  "Genuchten"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"#", " ", "Return", " ", "kf"}], ",", "kg"}], 
+  "\[IndentingNewLine]"}], "\n", 
+ RowBox[{"#", " ", "Matrix", " ", "dependent", " ", "permeability", " ", 
+  "parameter"}], "\n", 
+ RowBox[{"#", " ", "Values", " ", "chosen", " ", "to", " ", "fit", " ", 
+  "permeability", " ", "curve", " ", "with", " ", "experiment"}], "\n", 
+ RowBox[{
+  RowBox[{"m", "=", "0.85"}], "\[IndentingNewLine]"}], "\n", 
+ RowBox[{"kf", "=", 
+  RowBox[{
+   RowBox[{"S", "**", 
+    RowBox[{"(", 
+     RowBox[{"1", "/", "2"}], ")"}]}], "*", 
+   RowBox[{
+    RowBox[{"(", 
+     RowBox[{"1", "-", 
+      RowBox[{
+       RowBox[{"(", 
+        RowBox[{"1", "-", 
+         RowBox[{"S", "**", 
+          RowBox[{"(", 
+           RowBox[{"1", "/", "m"}], ")"}]}]}], ")"}], "**", "m"}]}], ")"}], "**",
+     "2"}]}]}], "\n", 
+ RowBox[{"kg", "=", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"(", 
+     RowBox[{"1", "-", "S"}], ")"}], "**", 
+    RowBox[{"(", 
+     RowBox[{"1", "/", "3"}], ")"}]}], "*", 
+   RowBox[{
+    RowBox[{"(", 
+     RowBox[{"1", "-", 
+      RowBox[{"S", "**", 
+       RowBox[{"(", 
+        RowBox[{"1", "/", "m"}], ")"}]}]}], ")"}], "**", 
+    RowBox[{"(", 
+     RowBox[{"2", "*", "m"}], ")"}]}]}]}], "\n", 
+ RowBox[{
+  RowBox[{"return", " ", "kf"}], ",", "kg"}]}], "Input",ExpressionUUID->\
+"78ebe083-ace6-4a5f-98f1-d81c3f6437fc"],
+
+Cell[TextData[StyleBox["Partial Densities", "Subsection"]], "Text",
+ CellChangeTimes->{{3.796658089095632*^9, 
+  3.796658091345174*^9}},ExpressionUUID->"865698fb-4614-4c5c-b840-\
+3d2517de2f70"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"def", " ", "partial_density", 
+   RowBox[{"(", 
+    RowBox[{"S", ",", 
+     RowBox[{"material_mode", "=", "0"}]}], ")"}]}], ":", 
+  RowBox[{
+  "#", " ", "Evaluate", " ", "saturation", " ", "dependent", " ", "partial", 
+   " ", "densities", " ", "for", " ", "fluids"}]}], "\n", 
+ RowBox[{"#", " ", "Partial", " ", "density", " ", "defined", " ", "as", " ", 
+  
+  RowBox[{"mass", "/", "bulk"}], " ", "volume"}], "\n", 
+ RowBox[{
+  RowBox[{"#", " ", 
+   RowBox[{"Return", "[", "rho_matrix", "]"}]}], ",", 
+  RowBox[{"[", "rho_water", "]"}], ",", 
+  RowBox[{"[", "rho_air", "]"}]}]}], "Input",
+ CellChangeTimes->{{3.7966581118279552`*^9, 
+  3.796658116498138*^9}},ExpressionUUID->"009b711b-75fe-447b-9a1a-\
+6d651c5d42c6"],
+
+Cell[BoxData[{
+ RowBox[{"rhoGR0", "=", 
+  RowBox[{"material_param", 
+   RowBox[{
+    RowBox[{"(", "material_mode", ")"}], "[", "1", "]"}]}]}], "\n", 
+ RowBox[{
+  RowBox[{
+  "#", " ", "Bulk", " ", "density", " ", "is", " ", "microscopic", " ", 
+   "density", " ", "weighted", " ", "by", " ", "1"}], "-", "porosity"}], "\n", 
+ RowBox[{"rhoS0", "=", 
+  RowBox[{"rhoSR0", "*", 
+   RowBox[{"(", 
+    RowBox[{"1", "-", "n0"}], ")"}]}]}], "\n", 
+ RowBox[{"#", " ", "Water", " ", "is", " ", "incompressible", " ", "so", " ", 
+  "rhoFR0", " ", "constant"}], "\n", 
+ RowBox[{"rhoF0", "=", 
+  RowBox[{"rhoFR0", "*", "S", "*", "n0"}]}], "\n", 
+ RowBox[{
+  RowBox[{"rhoG0", "=", 
+   RowBox[{"rhoGR0", "*", 
+    RowBox[{"(", 
+     RowBox[{"1", "-", "S"}], ")"}], "*", "n0"}]}], 
+  "\[IndentingNewLine]"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"return", " ", "rhoS0"}], ",", "rhoF0", ",", "rhoG0"}], 
+  "\[IndentingNewLine]"}], "\n", 
+ RowBox[{
+  RowBox[{"def", " ", "santos_param", 
+   RowBox[{"(", 
+    RowBox[{"S0", ",", "pc", ",", "dpcdS", ",", 
+     RowBox[{"material_mode", "=", "0"}], ",", 
+     RowBox[{"compare_mode", "=", "0"}]}], ")"}]}], ":", 
+  RowBox[{
+  "#", " ", "Evaluate", " ", "material", " ", "parameters", " ", "according", 
+   " ", "to", " ", "Santos", " ", 
+   RowBox[{"et", ".", "al"}]}]}], "\n", 
+ RowBox[{
+  RowBox[{"#", " ", "Input", " ", 
+   RowBox[{"parameters", ":", 
+    RowBox[{"#", " ", "Saturation"}]}]}], ",", 
+  RowBox[{"capillary", " ", "pressure"}], ",", 
+  RowBox[{"derivative", " ", 
+   RowBox[{"w", ".", "r", ".", "t", ".", "saturation"}]}]}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"#", " ", "Return", " ", "Kc"}], ",", "B1", ",", 
+   RowBox[{"B2", ".", "M1"}], ",", "M2", ",", "M3"}], 
+  "\[IndentingNewLine]"}], "\n", 
+ RowBox[{"#", " ", "Match", " ", "variables", " ", "with", " ", "those", " ", 
+  "used", " ", "by", " ", "Albers"}], "\n", 
+ RowBox[{
+  RowBox[{"#", " ", "In", " ", "Santos", " ", 
+   RowBox[{"et", ".", "al"}]}], ",", 
+  RowBox[{
+  "oil", " ", "and", " ", "water", " ", "were", " ", "considered", " ", 
+   "instead", " ", "of", " ", "gas", " ", "and", " ", "water"}]}], "\n", 
+ RowBox[{
+  RowBox[{"#", " ", "Therefore", " ", "o"}], ",", 
+  RowBox[{
+  "w", " ", "subscripts", " ", "represent", " ", "oil", " ", "and", " ", 
+   "water", " ", "respectively"}]}], "\n", 
+ RowBox[{"#", " ", "Theory", " ", "is", " ", "valid", " ", "for", " ", "any", 
+  " ", "two", " ", "phase", " ", 
+  RowBox[{"(", 
+   RowBox[{"non", "-", 
+    RowBox[{"wetting", " ", "and", " ", "wetting"}]}], ")"}], " ", 
+  "fluid"}], "\n", 
+ RowBox[{"SoBar", "=", 
+  RowBox[{"1", "-", "S0"}]}], "\n", 
+ RowBox[{
+  RowBox[{"SwBar", "=", "S0"}], "\[IndentingNewLine]"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"if", " ", "compare_mode"}], "\[Equal]", "0"}], ":", "Kg"}], ",", 
+  "rhoGR0", ",", 
+  RowBox[{"piG", "=", 
+   RowBox[{"material_param", 
+    RowBox[{"(", "material_mode", ")"}]}]}]}], "\n", 
+ RowBox[{"phiBar", "=", "n0"}], "\n", 
+ RowBox[{"K_s", "=", "Ks"}], "\n", 
+ RowBox[{"K_w", "=", "Kf"}], "\n", 
+ RowBox[{"K_o", "=", "Kg"}], "\n", 
+ RowBox[{
+  RowBox[{"K_m", "=", 
+   RowBox[{"K_s", "/", 
+    RowBox[{"(", 
+     RowBox[{"1", "+", 
+      RowBox[{"g", "*", "n0"}]}], ")"}]}]}], "\[IndentingNewLine]"}], "\n", 
+ RowBox[{
+  RowBox[{"#", " ", "Override", " ", "parameters", " ", "for", " ", "oil"}], 
+  "-", "water", "-", "sandstone"}], "\n", 
+ RowBox[{"#", " ", "For", " ", "comparing", " ", "with", " ", 
+  RowBox[{"Santos", "'"}], " ", "table"}], "\n", 
+ RowBox[{"#", " ", "In", " ", "CGS", " ", "units"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"if", " ", "compare_mode"}], "\[Equal]", "1"}], ":", "phiBar"}], 
+  "=", "0.19"}], "\n", 
+ RowBox[{"K_s", "=", 
+  RowBox[{"37.9", "E10"}]}], "\n", 
+ RowBox[{"K_w", "=", 
+  RowBox[{"2.25", "E10"}]}], "\n", 
+ RowBox[{"K_o", "=", 
+  RowBox[{"5.7", "E9"}]}], "\n", 
+ RowBox[{"#", " ", "Adjust", " ", "drained", " ", "modulus", " ", "to", " ", 
+  "match", " ", 
+  RowBox[{"Santos", "'"}], " ", "examples"}], "\n", 
+ RowBox[{
+  RowBox[{"#", " ", "adjust"}], "=", "4.27594"}], "\n", 
+ RowBox[{"adjust", "=", "5.49764"}], "\n", 
+ RowBox[{
+  RowBox[{"K_m", "=", 
+   RowBox[{
+    RowBox[{"K_s", "/", 
+     RowBox[{"(", 
+      RowBox[{"1", "+", 
+       RowBox[{"g", "*", "n0"}]}], ")"}]}], "*", "adjust"}]}], 
+  "\[IndentingNewLine]"}], "\n", 
+ RowBox[{"#", " ", "Derivative", " ", 
+  RowBox[{"w", ".", "r", ".", "t", ".", "oil"}], " ", "saturation", " ", "is",
+   " ", "negative", " ", "that", " ", "of", " ", "water", " ", 
+  "saturation"}], "\n", 
+ RowBox[{
+  RowBox[{"dpcdSo", "=", 
+   RowBox[{"-", "dpcdS"}]}], "\[IndentingNewLine]"}], "\n", 
+ RowBox[{"#", " ", "Intermediate", " ", "variables"}], "\n", 
+ RowBox[{"beta", "=", 
+  RowBox[{"pc", "/", "dpcdSo"}]}], "\n", 
+ RowBox[{"gamma", "=", 
+  RowBox[{
+   RowBox[{"(", 
+    RowBox[{"1", "+", 
+     RowBox[{"dpcdSo", "*", "SoBar", "*", 
+      RowBox[{"SwBar", "/", "K_w"}]}]}], ")"}], "/", 
+   RowBox[{"(", 
+    RowBox[{"1", "+", 
+     RowBox[{"dpcdSo", "*", "SoBar", "*", 
+      RowBox[{"SwBar", "/", "K_o"}]}]}], ")"}]}]}], "\n", 
+ RowBox[{
+  RowBox[{"alpha", "=", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"(", 
+      RowBox[{"gamma", "-", "1"}], ")"}], "*", 
+     RowBox[{"(", 
+      RowBox[{"SoBar", "+", "beta"}], ")"}]}], "+", "1"}]}], 
+  "\[IndentingNewLine]"}], "\n", 
+ RowBox[{
+  RowBox[{
+  "#", " ", "First", " ", "material", " ", "parameter", " ", "Kc", "*", 
+   "KfStar"}], "=", 
+  RowBox[{
+   RowBox[{"(", 
+    RowBox[{"1", "/", "alpha"}], ")"}], "*", 
+   RowBox[{"(", 
+    RowBox[{
+     RowBox[{"(", 
+      RowBox[{"gamma", "*", 
+       RowBox[{"SoBar", "/", "K_o"}]}], ")"}], "+", 
+     RowBox[{"(", 
+      RowBox[{"SwBar", "/", "K_w"}], ")"}]}], ")"}]}]}], "\n", 
+ RowBox[{"KfStar", "=", 
+  RowBox[{"1", "/", "KfStar"}]}], "\n", 
+ RowBox[{"QStar", "=", 
+  RowBox[{"KfStar", "*", 
+   RowBox[{
+    RowBox[{"(", 
+     RowBox[{"K_m", "-", "K_s"}], ")"}], "/", 
+    RowBox[{"(", 
+     RowBox[{"phiBar", "*", 
+      RowBox[{"(", 
+       RowBox[{"KfStar", "-", "K_s"}], ")"}]}], ")"}]}]}]}], "\n", 
+ RowBox[{
+  RowBox[{"KcStar", "=", 
+   RowBox[{"K_s", "*", 
+    RowBox[{
+     RowBox[{"(", 
+      RowBox[{"K_m", "+", "QStar"}], ")"}], "/", 
+     RowBox[{"(", 
+      RowBox[{"K_s", "+", "QStar"}], ")"}]}]}]}], 
+  "\[IndentingNewLine]"}], "\n", 
+ RowBox[{"#", " ", "B", " ", "parameters"}], "\n", 
+ RowBox[{"Theta", "=", 
+  RowBox[{"(", 
+   RowBox[{
+    RowBox[{"1", "/", "K_s"}], "-", 
+    RowBox[{"1", "/", "K_m"}], "+", 
+    RowBox[{"phiBar", "*", 
+     RowBox[{"(", 
+      RowBox[{
+       RowBox[{"1", "/", "K_m"}], "-", 
+       RowBox[{"1", "/", "KcStar"}]}], ")"}]}]}], ")"}]}], "\n", 
+ RowBox[{"Theta", "=", 
+  RowBox[{"Theta", "/", 
+   RowBox[{"(", 
+    RowBox[{"alpha", "*", 
+     RowBox[{"(", 
+      RowBox[{
+       RowBox[{"1", "/", "K_s"}], "-", 
+       RowBox[{"1", "/", "K_m"}], "+", 
+       RowBox[{"phiBar", "*", 
+        RowBox[{"(", 
+         RowBox[{
+          RowBox[{"1", "/", "K_m"}], "-", 
+          RowBox[{"1", "/", "KfStar"}]}], ")"}]}]}], ")"}]}], ")"}]}]}], "\n", 
+ RowBox[{"B1", "=", 
+  RowBox[{"KcStar", "*", "Theta", "*", 
+   RowBox[{"(", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{"SoBar", "+", "beta"}], ")"}], "*", "gamma"}], "-", "beta"}], 
+    ")"}]}]}], "\n", 
+ RowBox[{
+  RowBox[{"B2", "=", 
+   RowBox[{"KcStar", "*", "SwBar", "*", "Theta"}]}], 
+  "\[IndentingNewLine]"}], "\n", 
+ RowBox[{"#", " ", "M", " ", "parameters"}], "\n", 
+ RowBox[{"delta", "=", 
+  RowBox[{
+   RowBox[{"1", "/", "K_s"}], "-", 
+   RowBox[{"1", "/", "K_m"}]}]}], "\n", 
+ RowBox[{"q", "=", 
+  RowBox[{"phiBar", "*", 
+   RowBox[{"(", 
+    RowBox[{
+     RowBox[{"1", "/", "K_o"}], "+", 
+     RowBox[{"1", "/", 
+      RowBox[{"(", 
+       RowBox[{"dpcdSo", "*", "SoBar", "*", "SwBar"}], ")"}]}]}], 
+    ")"}]}]}], "\n", 
+ RowBox[{"chi", "=", 
+  RowBox[{
+   RowBox[{"(", 
+    RowBox[{"K_m", "/", 
+     RowBox[{"(", 
+      RowBox[{"KcStar", "-", "K_m"}], ")"}]}], ")"}], "*", 
+   RowBox[{"(", 
+    RowBox[{
+     RowBox[{"B2", "*", "q"}], "+", 
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{"SoBar", "+", "beta"}], ")"}], "*", 
+      RowBox[{"(", 
+       RowBox[{"1", "-", 
+        RowBox[{"KcStar", "/", "K_s"}]}], ")"}]}]}], ")"}]}]}], "\n", 
+ RowBox[{"r", "=", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"(", 
+     RowBox[{"SoBar", "+", "beta"}], ")"}], "/", "K_s"}], "+", 
+   RowBox[{"chi", "/", "K_m"}]}]}], "\n", 
+ RowBox[{"M3", "=", 
+  RowBox[{
+   RowBox[{"-", "B2"}], "*", 
+   RowBox[{"(", 
+    RowBox[{
+     RowBox[{"1", "/", 
+      RowBox[{"(", 
+       RowBox[{"K_m", "*", "delta"}], ")"}]}], "+", 
+     RowBox[{"r", "/", "q"}]}], ")"}]}]}], "\n", 
+ RowBox[{"M2", "=", 
+  RowBox[{"B2", "*", 
+   RowBox[{"(", 
+    RowBox[{"r", "/", "q"}], ")"}]}]}], "\n", 
+ RowBox[{"M1", "=", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"-", "B1"}], "/", 
+    RowBox[{"(", 
+     RowBox[{"K_m", "*", "delta"}], ")"}]}], "-", "M3"}]}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"return", " ", "KcStar"}], ",", "B1", ",", "B2", ",", "M1", ",", 
+   "M2", ",", "M3"}], "\[IndentingNewLine]"}], "\n", 
+ RowBox[{
+  RowBox[{"def", " ", "albers_param", 
+   RowBox[{"(", 
+    RowBox[{"S0", ",", "pc", ",", "dpcdS", ",", 
+     RowBox[{"material_mode", "=", "0"}]}], ")"}]}], ":", 
+  RowBox[{
+  "#", " ", "Evaluate", " ", "material", " ", "parameters", " ", "according", 
+   " ", "to", " ", 
+   RowBox[{"Albers", "'"}], " ", "Three", " ", "Component", " ", 
+   "Model"}]}], "\n", 
+ RowBox[{
+  RowBox[{"#", " ", "Define", " ", "bulk", " ", "modulus", " ", "bulkMod"}], 
+  "=", 
+  RowBox[{"lambda", "+", 
+   RowBox[{
+    RowBox[{"2", "/", "3"}], "mu", " ", "from", " ", "classical", " ", 
+    "dynamics"}]}]}], "\n", 
+ RowBox[{"#", " ", "Material", " ", "parameters", " ", "in", " ", "Albers", 
+  " ", "are", " ", "related", " ", "to", " ", "the", " ", "Santos", " ", 
+  "parameters"}], "\n", 
+ RowBox[{"KcStar", ",", "B1", ",", "B2", ",", "M1", ",", "M2", ",", 
+  RowBox[{"M3", "=", 
+   RowBox[{"santos_param", 
+    RowBox[{"(", 
+     RowBox[{"S0", ",", "pc", ",", "dpcdS", ",", "material_mode", ",", "0"}], 
+     ")"}]}]}]}], "\n", 
+ RowBox[{"bulkMod", "=", 
+  RowBox[{"KcStar", "-", 
+   RowBox[{"2", "*", "n0", "*", 
+    RowBox[{"(", 
+     RowBox[{"B1", "+", "B2"}], ")"}]}], "+", 
+   RowBox[{
+    RowBox[{"n0", "**", "2"}], "*", 
+    RowBox[{"(", 
+     RowBox[{"M1", "+", "M2", "+", 
+      RowBox[{"2", "*", "M3"}]}], ")"}]}]}]}], "\n", 
+ RowBox[{"rhoF0kappaF", "=", 
+  RowBox[{"M2", "*", 
+   RowBox[{"n0", "**", "2"}]}]}], "\n", 
+ RowBox[{"rhoG0kappaG", "=", 
+  RowBox[{"M1", "*", 
+   RowBox[{"n0", "**", "2"}]}]}], "\n", 
+ RowBox[{"Qf", "=", 
+  RowBox[{"n0", "*", 
+   RowBox[{"(", 
+    RowBox[{"B2", "-", 
+     RowBox[{"n0", "*", 
+      RowBox[{"(", 
+       RowBox[{"M2", "+", "M3"}], ")"}]}]}], ")"}]}]}], "\n", 
+ RowBox[{"Qg", "=", 
+  RowBox[{"n0", "*", 
+   RowBox[{"(", 
+    RowBox[{"B1", "-", 
+     RowBox[{"n0", "*", 
+      RowBox[{"(", 
+       RowBox[{"M1", "+", "M3"}], ")"}]}]}], ")"}]}]}], "\n", 
+ RowBox[{"Qfg", "=", 
+  RowBox[{"M3", "*", 
+   RowBox[{"n0", "**", "2"}]}]}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"return", " ", "bulkMod"}], ",", "rhoF0kappaF", ",", "rhoG0kappaG",
+    ",", "Qf", ",", "Qg", ",", "Qfg"}], "\[IndentingNewLine]"}], "\n", 
+ RowBox[{
+  RowBox[{"def", " ", "derived_param", 
+   RowBox[{"(", 
+    RowBox[{"S0", ",", 
+     RowBox[{"material_mode", "=", "0"}]}], ")"}]}], ":", 
+  RowBox[{
+  "#", " ", "Derive", " ", "remaining", " ", "parameters", " ", "for", " ", 
+   "wave", " ", "analysis"}]}], "\n", 
+ RowBox[{
+  RowBox[{"#", " ", 
+   RowBox[{"Return", "[", 
+    RowBox[{"Lame", " ", "constant"}], "]"}]}], ",", 
+  RowBox[{"[", 
+   RowBox[{"partial", " ", "densities"}], "]"}], ",", 
+  RowBox[{"[", "compressibility", "]"}], ",", 
+  RowBox[{"[", "resistance", "]"}]}], "\n", 
+ RowBox[{"piG", "=", 
+  RowBox[{"material_param", 
+   RowBox[{
+    RowBox[{"(", "material_mode", ")"}], "[", "2", "]"}]}]}], "\n", 
+ RowBox[{"pc", ",", 
+  RowBox[{"dpcdS", "=", 
+   RowBox[{"capillary", 
+    RowBox[{"(", "S0", ")"}]}]}]}], "\n", 
+ RowBox[{"bulkMod", ",", "rhoF0kappaF", ",", 
+  RowBox[{"rhoG0kappaG", "=", 
+   RowBox[{"albers_param", 
+    RowBox[{
+     RowBox[{"(", 
+      RowBox[{"S0", ",", "pc", ",", "dpcdS", ",", "material_mode"}], ")"}], 
+     "[", 
+     RowBox[{"0", ":", "3"}], "]"}]}]}]}], "\n", 
+ RowBox[{"kf", ",", 
+  RowBox[{"kg", "=", 
+   RowBox[{"permeability", 
+    RowBox[{"(", "S0", ")"}]}]}]}], "\n", 
+ RowBox[{"rhoS0", ",", "rhoF0", ",", 
+  RowBox[{"rhoG0", "=", 
+   RowBox[{"partial_density", 
+    RowBox[{"(", 
+     RowBox[{"S0", ",", "material_mode"}], ")"}]}]}]}], "\n", 
+ RowBox[{"#", " ", "First", " ", "Lame", " ", "constant"}], "\n", 
+ RowBox[{"lambS", "=", 
+  RowBox[{"bulkMod", "-", 
+   RowBox[{
+    RowBox[{"(", 
+     RowBox[{"2", "/", "3"}], ")"}], "*", "muS"}]}]}], "\n", 
+ RowBox[{"#", " ", "Compressibility", " ", "factor"}], "\n", 
+ RowBox[{"kappaF", "=", 
+  RowBox[{"rhoF0kappaF", "/", "rhoF0"}]}], "\n", 
+ RowBox[{"kappaG", "=", 
+  RowBox[{"rhoG0kappaG", "/", "rhoG0"}]}], "\n", 
+ RowBox[{"#", " ", "Resistance", " ", "parameters"}], "\n", 
+ RowBox[{"piFS", "=", 
+  RowBox[{"piF", "/", "kf"}]}], "\n", 
+ RowBox[{"piGS", "=", 
+  RowBox[{"piG", "/", "kg"}]}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"return", " ", "lambS"}], ",", "rhoS0", ",", "rhoF0", ",", "rhoG0",
+    ",", "kappaF", ",", "kappaG", ",", "piFS", ",", "piGS"}], 
+  "\[IndentingNewLine]"}], "\n", 
+ RowBox[{
+  RowBox[{"def", " ", "material_param", 
+   RowBox[{"(", 
+    RowBox[{"material_mode", "=", "0"}], ")"}]}], ":", 
+  RowBox[{
+   RowBox[{
+   "#", " ", "Return", " ", "material", " ", "parameters", " ", "for", " ", 
+    "the", " ", "non"}], "-", 
+   RowBox[{
+   "wetting", " ", "phase", " ", "which", " ", "can", " ", "be", " ", 
+    "substituted"}]}]}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"if", " ", "material_mode"}], "\[Equal]", "0"}], ":", 
+  RowBox[{
+   RowBox[{"#", " ", "Non"}], "-", 
+   RowBox[{"wetting", " ", "phase"}]}], ":", "air"}], "\n", 
+ RowBox[{"Kg", "=", 
+  RowBox[{"1.01", "E5"}]}], "\n", 
+ RowBox[{"rhoGR0", "=", "1.2"}], "\n", 
+ RowBox[{"piG", "=", 
+  RowBox[{"1.82", "E5"}]}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"if", " ", "material_mode"}], "\[Equal]", "1"}], ":", 
+  RowBox[{
+   RowBox[{"#", " ", "Non"}], "-", 
+   RowBox[{"wetting", " ", "phase"}]}], ":", "oil"}], "\n", 
+ RowBox[{"Kg", "=", 
+  RowBox[{"5.7", "E8"}]}], "\n", 
+ RowBox[{"rhoGR0", "=", "700"}], "\n", 
+ RowBox[{"piG", "=", 
+  RowBox[{"1", "E8"}]}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"if", " ", "material_mode"}], "\[Equal]", "2"}], ":", 
+  RowBox[{
+   RowBox[{"#", " ", "Non"}], "-", 
+   RowBox[{"wetting", " ", "phase"}]}], ":", "\"\<gas\>\""}], "\n", 
+ RowBox[{"Kg", "=", 
+  RowBox[{"2.2", "E7"}]}], "\n", 
+ RowBox[{"rhoGR0", "=", "100"}], "\n", 
+ RowBox[{"piG", "=", 
+  RowBox[{"1.5", "E5"}]}], "\n", 
+ RowBox[{
+  RowBox[{"return", " ", "Kg"}], ",", "rhoGR0", ",", "piG"}]}], "Input",
+ CellChangeTimes->{{3.796658105496291*^9, 
+  3.7966581205607843`*^9}},ExpressionUUID->"3ea1a41f-3ba0-4b66-8394-\
+719eb63e6ac7"]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+},
+WindowSize->{1013, 655},
+WindowMargins->{{Automatic, 31}, {Automatic, 25}},
+FrontEndVersion->"12.1 for Mac OS X x86 (64-bit) (March 18, 2020)",
+StyleDefinitions->"Default.nb",
+ExpressionUUID->"17b309a6-c9b7-4062-8c5f-85d3518dafdc"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 228, 5, 160, "Title",ExpressionUUID->"da2c0fb4-6938-4e14-946d-7bce75a391f3"],
+Cell[CellGroupData[{
+Cell[833, 31, 160, 3, 67, "Section",ExpressionUUID->"a36ac808-d305-4d1c-910b-ec1b3ed6314c"],
+Cell[996, 36, 3906, 89, 661, "Input",ExpressionUUID->"25e20e3e-9291-4948-a4a3-b3e806f6d3ec"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[4939, 130, 163, 3, 67, "Section",ExpressionUUID->"4b9eedbd-931f-4e5a-8c14-e369a9f3324e"],
+Cell[CellGroupData[{
+Cell[5127, 137, 170, 3, 54, "Subsection",ExpressionUUID->"da00e21e-ffaa-4efb-bfff-ced7a7eb1b98"],
+Cell[CellGroupData[{
+Cell[5322, 144, 7105, 170, 661, "Input",ExpressionUUID->"87f2a57b-e4f5-4082-abb2-7be57b689db8"],
+Cell[12430, 316, 482, 12, 56, "Output",ExpressionUUID->"55ff7551-72c4-4a14-8324-c98cb320e3ff"],
+Cell[12915, 330, 457, 10, 34, "Output",ExpressionUUID->"72197d03-2706-490c-b28c-4aa77e7b3cf5"]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[13421, 346, 160, 3, 54, "Subsection",ExpressionUUID->"6b18c760-5a44-4ca9-bd63-16fd274a9daf"],
+Cell[13584, 351, 1772, 52, 262, "Input",ExpressionUUID->"78ebe083-ace6-4a5f-98f1-d81c3f6437fc"],
+Cell[15359, 405, 193, 3, 41, "Text",ExpressionUUID->"865698fb-4614-4c5c-b840-3d2517de2f70"],
+Cell[15555, 410, 753, 19, 73, "Input",ExpressionUUID->"009b711b-75fe-447b-9a1a-6d651c5d42c6"],
+Cell[16311, 431, 15003, 451, 2404, "Input",ExpressionUUID->"3ea1a41f-3ba0-4b66-8394-719eb63e6ac7"]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+

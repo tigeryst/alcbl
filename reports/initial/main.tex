@@ -1,0 +1,222 @@
+% Initial Project Report
+% Acoustic Localisation of Subterranean Beetle Larvae
+% Supervisor: Christopher Lester
+
+\documentclass[twocolumn]{article}
+\usepackage[margin=0.7in]{geometry}
+\geometry{a4paper, top = 1in, bottom = 1in}
+\usepackage{amsmath}  % for equation alignment
+\usepackage{graphicx}
+\graphicspath{{eps/}}
+\usepackage{subcaption} % for including subfigures
+\usepackage[space]{grffile}
+\usepackage{fancyhdr}
+\usepackage[backend=biber,style=numeric,citestyle=numeric]{biblatex}
+\bibliography{biblio}
+\usepackage{booktabs}
+\newcommand{\otoprule}{\midrule[\heavyrulewidth]}
+\usepackage{siunitx}
+\usepackage{caption}
+
+% Useful commands
+% ~\cite{tag}
+% where the tag is specified in the biblio.bib
+
+% \begin{figure}
+%   \centering
+%   \includegraphics[width = 2in, totalheight = 3in, trim = l b r t, clip = true, bb = 10 20 100 200]{filename}
+%   \caption{caption}
+%   \label{fig:label}
+% \end{figure}
+% Note: can alternatively use viewport = bounding box parameters instead of trim
+% To reference the figure, use e.g. Figure ~\ref{label} shows...
+
+% \begin{table}
+% \caption{caption}
+% \label{t:label}
+% \centering
+% \begin{tabular}{clccc}
+% \toprule
+% $D$  &          & $P_u$     & $\sigma_N$     \\
+% (in) &          & (lbs)     & (psi)          \\\otoprule
+% 5    &  test 1  & 285       & 38.00          \\
+%      &  test 2  & 287       & 38.07          \\\midrule
+% 10   &  test 1  & 430       & 30.67          \\
+%      &  test 2  & 433       & 28.67          \\
+% \bottomrule
+% \end{tabular}
+% \end{table}
+% To reference the table, use e.g. Table ~\ref{label} shows...
+
+\begin{document}
+% \setlength{\parindent}{0in}
+
+% Title
+\title{Initial Project Report\\
+    Acoustic Localisation of Subterranean Beetle Larvae}
+\author{Yotsawat Tawantalerngrit (YT337)\\
+    Supervisor: Christopher Lester}
+\pagestyle{empty}
+\maketitle
+\thispagestyle{empty}
+
+\pagestyle{fancy}
+
+\begin{abstract}
+    For this project, I set out to investigate the feasibility of determining the precise coordinates of subterranean chafer larvae using acoustic methods. It is known that these larvae produce a characteristic sound spectrum (stridulation) that can be easily distinguished from background noise~\cite{stridDetect}. In the initial stage, the acoustic properties of soil need to be understood before any acoustic techniques can be used. Soil can be modeled as a material consisting of a grainy matrix phase with a fluid phase of soil suspended in water and air~\cite{compactSoil}. From Biot's theory~\cite{biot}, it is expected that the detectable wave is a type II fast compressional wave (longitudinal) and that its attenuation and speed is dependent on compaction and moisture of the soil. To measure these properties, electret microphones~\cite{eavesdropInsect} connected to an amplifier and high-pass filter will be used as a low-cost alternative to accelerometers with the stridulation frequency lying within the sensor's operating frequency. Armed with a solid grounding in the acoustic property of soil, I shall proceed to write a program that can detect stridulation from the signal input from the sensors using fractal dimension analysis. Finally, the feasibility of triangulation will be explored.
+\end{abstract}
+
+% \tableofcontents
+% \listoffigures
+% \newpage
+
+\section{Perspective}
+
+\subsection{Chafers}
+Chafers are beetles belonging to the Scarabaeidae family~\cite{chaferFacts}\cite{chaferControl} and are common pests in gardens and nurseries. Damage caused by this invasive species to ornamental lawns is often expensive and are caused by the larvae feeding on the roots of the plants. Late in spring, mated females deposit their eggs in the soil which then hatch in late July~\cite{chaferFacts}. The presence of these larvae often goes undetected until significant damage is done~\cite{stridDetect}, typically as they reach maturity from March through May. The beetles oviposit their larvae at a depth of $10\ \si{cm}$ and grubs can reach a size of up to $30\ \si{mm}$ long~\cite{oviDepth}. Damage to the lawns is often exacerbated by birds tearing up the turf to feed on the grubs.
+
+Traditional methods used to control pest activities involve the use of pathogenic nematodes which work by infecting the larvae with a fatal bacterial disease. This can be watered onto the turf area that has turned yellow as a result of root damage. Due to the biological nature, the effectiveness depends on the temperature and moisture of the soil~\cite{chaferControl}. The control method often follows laborious and invasive excavation of the turf in order to identify the pest. This motivates the search for new non-invasive monitoring techniques.
+
+\subsection{Acoustic detection}
+One way to monitor grub activity is through acoustic methods. Acoustic techniques have been successfully employed to quantitatively characterise the population density of chafer bug larvae in grain and wood~\cite{centuryDetect}. Many of these devices have been marketed for field use.
+
+Chafer bug larvae produce a characteristic sound known as stridulation by rubbing together two different body parts. This serves as a means of communication. The signal produced by the larvae can be easily distinguished from background noise at high frequencies as shown in Fig.~\ref{fig:noiseStrid}.
+
+\begin{figure}
+    \centering
+    \includegraphics[width = 0.49\textwidth]{figures/eps/noiseStrid.eps}
+    \caption{At high frequencies, the spectra for the different larvae species recorded all have energies much higher than that of the noise. Figure adapted from~\cite{xrayTom}.}
+    \label{fig:noiseStrid}
+\end{figure}
+
+There is still considerable difficulty in reliably detecting stridulation produced by the larvae as soil attenuates sound more strongly than grains or wood so this limits the range and practicality of acoustic methods. The soil property can also vary notably depending on soil moisture, impurities and stone distribution~\cite{stridDetect}.
+
+Despite challenges, much progress has been made in non-invasive techniques used to monitor subterranean grubs but these are currently limited to deducing the density of grubs from the number of stridulations detected~\cite{centuryDetect}. By using grid sampling, GPS data and sound recordings, it was even possible to draw out a map of areas of infestation~\cite{infestMap}\cite{anotherMap}.
+
+There are, however, relatively few attempts made to precisely determine the location of the larvae. If proven feasible, there is potential for real-time, continuous monitoring of lawns which may lead to a savings in repair and maintenance costs as well as more effective pest control measures. The goal of this project is to develop a technique that takes advantage of the unique characteristic spectrum produced by the stridulation to triangulate the location of the larvae. This is made possible by understanding the acoustic properties of the soil and building an appropriate system of sensors that is able to distinguish between stridulation and background noise.
+
+The advantage of conducting the experiment in an artificial laboratory set-up rather than out in the fields is that the degree of complexity of the system can be incremented in steps. I plan to begin the investigation with an acoustically insulated container of soil, introduce artificial background noise, add multiple sound sources and investigate the effects of large impurities in the soil.
+
+\section{Background to the Experiment}
+\subsection{Sound waves in soil}
+In designing a device to detect the presence of the subterranean larvae, it is crucial to understand the acoustic properties of soil. Soil is a porous medium which can be modelled as a material consisting of a bulk matrix phase surrounding a fluid phase. Biot's theory predicts the existence of three types of wave---the fast P-wave, the slow P-wave and the shear S-wave~\cite{biot}, each with different propagation properties. The slow P-wave is attenuated heavily and is not generally detected. The wave detected by the sensor will be the fast P-wave corresponding to a longitudinal compressional wave~\cite{compactSoil}.
+
+The wave velocity $V_p$ is given by:
+
+\begin{equation}
+    V_p = [(B + 4G/3)/\rho_b]^{1/2}
+\end{equation}
+
+where $B$ and $G$ are the effective bulk and shear moduli of the soil, $\rho_b$ is the bulk density of the soil.
+
+This equation can be rewritten in terms of properties of the granular matrix (skeleton) and the fluid and soil mixture (suspension):
+
+\begin{equation}
+    \label{eq:pWaveVel}
+    V_p = \{([B_{sk} + 4G_{sk}/3] + B_{sus})/\rho_b\}^{1/2}
+\end{equation}
+
+where $B_{sk}$ and $G_{sk}$ are the bulk and shear moduli of the skeleton and $B_{sus}$ is the bulk modulus of the suspension.
+
+The contribution to the bulk modulus of the suspension is given in terms of its components as:
+
+\begin{equation}
+    \label{eq:susBulk}
+    B_{sus} = \{n[S/B_w + (1-S)/B_a]+(1-n)/B_g\}^{-1}
+\end{equation}
+
+where $B_w$, $B_a$ and $B_g$ are the bulk moduli of water, air and grains respectively; $n$ is a measure of porosity and $S$ is the degree of saturation.
+
+Finally, the density of the damp soil is:
+
+\begin{equation}
+    \label{eq:rhoBulk}
+    \rho_b = (1-n)\rho_g + nS\rho_w
+\end{equation}
+
+where $\rho_w$ and $\rho_g$ are the densities of water and grains.
+
+Inspecting these equations, we see that the velocity of the compression wave from Eq.~\ref{eq:pWaveVel} varies with the porosity and degree of saturation of the soil through Eq.~\ref{eq:susBulk} and Eq.~\ref{eq:rhoBulk}.
+
+Precise measurement of the wave velocity in the soil will become important when determining distance of the sound source from the detector in the triangulation of the source.
+
+\subsection{Modelling chafer grubs}
+The acoustic profile of the chafer grub stridulation at characteristic frequency has been recorded~\cite{stridDetect}. The audio recording is shown in Fig.~\ref{fig:stridProfile}.
+
+\begin{figure}
+    \centering
+    \includegraphics[width = 0.49\textwidth]{figures/eps/stridProfile.eps}
+    \caption{Audio recording showing two stridulations of cockchafer larvae (at $\sim650$ ms and $\sim1100$ ms) and larval movement (from $\sim1700$ ms onwards). Figure adapted from~\cite{stridDetect}.}
+    \label{fig:stridProfile}
+\end{figure}
+
+The recording can be passed as input to a piezoelectric speaker embedded $10\ \si{cm}$ below the soil surface, acting as a sound emitter. This will serve as a model of a chafer grub whose output can be easily controlled using an Arduino.
+
+Note that larval produced sounds has a measured intensity typically $< 80\ \si{dB}$ and a frequency range between 500 and 1800 Hz~\cite{xrayTom}. The Arduino output can be adjusted to mimic real signal from the larvae.
+
+When considering a suitable experimental set-up for detecting the subterranean larvae, we note that we are trying to detect a small object $\sim30\ \si{mm}$ buried at a depth 10--30 cm which is known to produce low intensity, high frequency characteristic sound.
+
+This rules out the acoustic to seismic technique coupled with a laser-Doppler vibrometer as the buried object needs to interact strongly enough with the propagating wave sent in from the surface such that there is significant backscatter to the surface~\cite{acousSeisCouple}. The signal-to-noise ratio of the backscatter due to the small organism is likely too low.
+
+Some examples of sensors that can be used to detect the vibration of soil are accelerometers, piezoelectric disks and an electret microphone. In this experiment, we choose to use electret microphones as sensors due to their low cost and sturdiness.
+
+\subsection{Triangulation}
+Using four detectors, it is possible to constrain the coordinates of the source given the relative arrival times of the signal. Let the location of the sound source be $(x_0,y_0,z_0)$. I will employ a time difference of arrival method (multilateration) to locate the source of sound. Given sound speed $V_p$, the equation at each detector $i$ is:
+
+\begin{equation}
+    \label{eq:triangulation}
+    (x_i-x_0)^2 + (y_i - y_0)^2 + (z_i - z_0)^2 = [r+V_p\Delta\tau_i]^2
+\end{equation}
+
+where $r$ is the unknown distance from the closest observer to the source, $\Delta\tau_i$ is the time delay between the earliest detection of the signal to the detection at detector $i$.
+
+There are four unknowns and we would like to solve for the coordinate of the sound source so we will require four detectors placed at different known locations to provide enough constraints.
+
+\subsection{Seismic noise}
+Seismic noise is an unwanted component of signals recorded from the ground. The presence of seismic noise is unavoidable as the detector is developed for use in the fields and therefore cannot be isolated from background noise. We can characterise these noises into two regimes---low frequency noise due to natural causes and cultural noise due to man-made machineries. Low frequency noise should not pose any significant problems for the experiment as the power spectrum of the stridulation is much larger than the background noise which decays away. As an extension to the investigation, it will be useful to record and characterise these high frequency, man-made noise.
+
+\section{The Experiment}
+\subsection{Preparing soil sample}
+To ensure repeatability, it is important to be able to prepare a homogenous soil sample that has the desired compaction and moisture. Loosely compacted soil can be prepared by pouring moisture-adjusted soil through a sieve into a calibrated soil containing vessel. We then level off the surface to the desired soil thickness. Differing level of compaction can be achieved by adding a known mass of soil and pressing down to the desired soil thickness.
+
+The desired level of moisture can be obtained by oven drying the soil and adding the appropriate amount of water to the dried product.
+
+To minimise noise, we conduct the experiment in an acoustic foam box as we are initially only interested in how the soil conditions will affect wave propagation. Extracting signal from noise in an open environment shall be investigated later.
+
+\subsection{Arduino pulse generator}
+An Arduino can be used to ouput a pulse with the desired frequency and amplitude to the output pin. Connect the output to a small speaker placed 10 cm below the soil surface to act as a sound source.
+
+\subsection{Microphone}
+Different devices can be used as sensors to detect the wave propagating through soil. Comparison made between an accelerometer and electret microphone shows that the accelerometer has a higher overall sensitivity. The electret has a constant sensitivity up to 5 kHz above which the sensitivity steadily decreases while the accelerometer has constant sensitivity in the range 10 Hz to 3500 Hz and increasing sensitivity from 3500 Hz to 16 kHz~\cite{eavesdropInsect}.
+
+Since the goal is to develop a low cost, portable device and we have assumed that the frequencies produced by the larvae lie within the range 500--1500 Hz, the cheaper electret microphone should suffice.
+
+\subsection{Amplification}
+The weak signal detected from the microphone needs to be passed to an amplifier. The signal can also be passed through a high-pass filter to remove any low frequency noise.
+
+\subsection{Attenuation and speed of sound in soil}
+We identify the frequency of the signal such that a reasonable amplitude is detected at the receiver placed 15 cm away from the source. Record the distance of the receiver and the frequency used. Investigate how compaction and moisture affects sound attenuation and velocity and plot a calibration curve.
+
+Prepare the soil sample such that attenuation is low. Place the detector 15 cm away from the source. Vary the frequency of the signal and record the amplitude detected and the speed of sound for each frequency. Determine the range of frequencies over which the signal can still be distinguished from background noise.
+
+\subsection{Mimicking and detecting stridulation}
+Extending the investigation to more closely model signals produced by chafer grubs, including background noise, replace the pulse generated by the Arduino with recordings of stridulation played through a small speaker embedded in the soil.
+
+Automatic detection of stridulation from noisy environments can be done using fractal dimension analysis. The algorithm focuses on the time domain and so does not require the Fourier transform of the input signal. It is also amplitude independent so is suitable for use with a low signal-to-noise ratio system. The time domain is split into equal interval sections $sc$ which is further divided into subsections $f$. For each subsection $f$, the fractal dimension $D$, defined as a scalar measure of the complexity of the waveform, is calculated. For each $f$ in $sc$, we calculate the mean deviation from the median:
+
+\begin{equation}
+    FD_f = \frac{D_f-\text{median}(D_{sc})}{\text{median}(D_{sc})}
+\end{equation}
+
+Repeating the calculations with subsection $f'$ with a different subsection width, we obtain another set of mean deviation which can be summed together with the previous one to get the summed fractal distance (SFD). Applying certain threshold values allows the stridulation peaks to be identified.
+
+\subsection{Triangulation}
+Insert four probes consisting of electret microphones at different coordinates in the soil and record their coordinates relative to one of the microphones, which we can take to be at the origin. Place a sound source at an arbitrary coordinate between the array of detectors.
+
+Write a program to convert time delays between the reception of signals detected at each microphone to coordinate of the sound source, solving the system of equations in Eq.~\ref{eq:triangulation}.
+
+Quantify the errors in the calculated value and compare the calculated coordinate with that measured.
+
+\printbibliography
+
+\end{document}
